@@ -202,9 +202,36 @@ const Footer = () => {
               </li>
             </ul>
           </div>
+
+          {/* Legal Links */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Legal</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link to="/privacy-policy" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link to="/terms-and-conditions" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  Terms & Conditions
+                </Link>
+              </li>
+              <li>
+                <Link to="/cancellation-refund" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  Cancellation & Refund
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  Contact Us
+                </Link>
+              </li>
+            </ul>
+          </div>
           
           {/* Newsletter/Build with Us Section */}
-          <div className="md:col-span-2">
+          <div className="md:col-span-1">
             {user ? (
               <>
                 <div className="space-y-4">
