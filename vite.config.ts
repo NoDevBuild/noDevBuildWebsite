@@ -5,7 +5,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
-    host: true
+    host: true,
+    // Add historyApiFallback for client-side routing
+    historyApiFallback: true
   },
   optimizeDeps: {
     exclude: ['lucide-react']
