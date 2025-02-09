@@ -7,20 +7,20 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
-  build: {
-    rollupOptions: {
-      output: {
-        // Ensure proper MIME types for JavaScript modules
-        entryFileNames: 'assets/[name]-[hash].js',
-        chunkFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]'
-      }
-    }
-  },
-  server: {
-    headers: {
-      // Ensure proper MIME type for JavaScript modules
-      'Content-Type': 'application/javascript'
-    }
-  }
+  // build: {
+  //   rollupOptions: {
+  //     output: {
+  //       // Ensure proper MIME types for JavaScript modules
+  //       entryFileNames: 'assets/[name]-[hash].js',
+  //       chunkFileNames: 'assets/[name]-[hash].js',
+  //       assetFileNames: 'assets/[name]-[hash].[ext]'
+  //     }
+  //   }
+  // },
+  // server: {
+  //   headers: {
+  //     // Ensure proper MIME type for JavaScript modules
+  //     'Content-Type': 'application/javascript'
+  //   }
+  // }
 });
