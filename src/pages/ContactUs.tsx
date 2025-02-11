@@ -159,8 +159,8 @@ const ContactUs = () => {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2">Call Us</h3>
-                  <a href="tel:+1234567890" className="text-gray-300 hover:text-blue-400 transition-colors">
-                    +1 (234) 567-890
+                  <a href="tel:+919344566750" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    +91 93445 66750
                   </a>
                 </div>
               </div>
@@ -175,9 +175,9 @@ const ContactUs = () => {
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2">Visit Us</h3>
                   <p className="text-gray-300">
-                    123 Innovation Street<br />
-                    Tech Hub, CA 94043<br />
-                    United States
+                    141 C, Sri Ramnagar<br />
+                    Kondapur, Hyderabad<br />
+                    India
                   </p>
                 </div>
               </div>
