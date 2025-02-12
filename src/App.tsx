@@ -1,109 +1,112 @@
-import React, { useEffect } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { onAuthStateChanged } from 'firebase/auth';
-import { collection, getDocs, query, limit } from 'firebase/firestore';
-import { auth, db } from './lib/firebase';
-import { useDispatch, useSelector } from 'react-redux';
-import { setUser, setInitialized } from './store/authSlice';
-import { setLoading, setCourses, setError } from './store/coursesSlice';
-import { RootState } from './store/store';
-import { scrollToTop } from './utils/helpers';
-import Header from './components/Header';
-import Hero from './components/Hero';
-import WhyNoCode from './components/WhyNoCode';
-import Instructors from './components/Instructors';
-import Courses from './components/Courses';
-import Benefits from './components/Benefits';
-import Testimonials from './components/Testimonials';
-import Footer from './components/Footer';
-import StartupBuilder from './components/StartupBuilder';
-import RegisterPage from './pages/RegisterPage';
-import LoginPage from './pages/LoginPage';
-import AdminPage from './pages/AdminPage';
-import CoursesPage from './pages/CoursesPage';
-import CourseDetailPage from './pages/CourseDetailPage';
+import React, { useEffect } from 'react'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { onAuthStateChanged } from 'firebase/auth'
+import { collection, getDocs, query, limit } from 'firebase/firestore'
+import { auth, db } from './lib/firebase'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUser, setInitialized } from './store/authSlice'
+import { setLoading, setCourses, setError } from './store/coursesSlice'
+import { RootState } from './store/store'
+import { scrollToTop } from './utils/helpers'
+import Header from './components/Header'
+import Hero from './components/Hero'
+import WhyNoCode from './components/WhyNoCode'
+import Instructors from './components/Instructors'
+import Courses from './components/Courses'
+import Benefits from './components/Benefits'
+import Testimonials from './components/Testimonials'
+import Footer from './components/Footer'
+import StartupBuilder from './components/StartupBuilder'
+import RegisterPage from './pages/RegisterPage'
+import LoginPage from './pages/LoginPage'
+import AdminPage from './pages/AdminPage'
+import CoursesPage from './pages/CoursesPage'
+import CourseDetailPage from './pages/CourseDetailPage'
 
 function App() {
-  const location = useLocation();
-  const dispatch = useDispatch();
-  const { initialized } = useSelector((state: RootState) => state.auth);
-  const isAuthPage = ['/login'].includes(location.pathname);
+  const location = useLocation()
+  const dispatch = useDispatch()
+  const { initialized } = useSelector((state: RootState) => state.auth)
+  const isAuthPage = ['/login'].includes(location.pathname)
 
   // Scroll to top on route change
   useEffect(() => {
-    scrollToTop({ behavior: 'instant' });
-  }, [location.pathname]);
+    scrollToTop({ behavior: 'instant' })
+  }, [location.pathname])
 
   // Handle authentication state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      dispatch(setUser(user));
-      dispatch(setInitialized(true));
-    });
+      dispatch(setUser(user))
+      dispatch(setInitialized(true))
+    })
 
-    return () => unsubscribe();
-  }, [dispatch]);
+    return () => unsubscribe()
+  }, [dispatch])
 
   // Fetch courses
   useEffect(() => {
     const fetchCourses = async () => {
-      dispatch(setLoading(true));
+      dispatch(setLoading(true))
       try {
-        const coursesRef = collection(db, 'courses');
-        const q = query(coursesRef, limit(6));
-        const snapshot = await getDocs(q);
-        const coursesData = snapshot.docs.map(doc => ({
+        const coursesRef = collection(db, 'courses')
+        const q = query(coursesRef, limit(6))
+        const snapshot = await getDocs(q)
+        const coursesData = snapshot.docs.map((doc) => ({
           id: doc.id,
-          ...doc.data()
-        }));
-        dispatch(setCourses(coursesData));
+          ...doc.data(),
+        }))
+        dispatch(setCourses(coursesData))
       } catch (err) {
-        dispatch(setError('Failed to load courses'));
-        console.error('Error fetching courses:', err);
+        dispatch(setError('Failed to load courses'))
+        console.error('Error fetching courses:', err)
       }
-    };
+    }
 
-    fetchCourses();
-  }, [dispatch]);
+    fetchCourses()
+  }, [dispatch])
 
   if (!initialized) {
     return (
-      <div className="min-h-screen bg-[#0d1117] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent"></div>
+      <div className='min-h-screen bg-[#0d1117] flex items-center justify-center'>
+        <div className='animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent'></div>
       </div>
-    );
+    )
   }
 
   return (
-    <div className="min-h-screen bg-[#0d1117]">
+    <div className='min-h-screen bg-[#0d1117]'>
       {!isAuthPage && <Header />}
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/startup-builder" element={<StartupBuilder />} />
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="/courses" element={<CoursesPage />} />
-        <Route path="/courses/:courseId" element={<CourseDetailPage />} />
-        <Route path="/" element={
-          <>
-            <Hero />
-            <div className="relative">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <div className="w-[800px] h-[400px] bg-purple-500/20 blur-[120px] rounded-full"></div>
+        <Route path='/login' element={<LoginPage />} />
+        <Route path='/register' element={<RegisterPage />} />
+        <Route path='/startup-builder' element={<StartupBuilder />} />
+        <Route path='/admin' element={<AdminPage />} />
+        <Route path='/courses' element={<CoursesPage />} />
+        <Route path='/courses/:courseId' element={<CourseDetailPage />} />
+        <Route
+          path='/'
+          element={
+            <>
+              <Hero />
+              <div className='relative w-full overflow-hidden'>
+                <div className='absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+                  <div className='w-[90vw] max-w-[800px] h-[400px] bg-purple-500/20 blur-[120px] rounded-full'></div>
+                </div>
+                <Courses />
+                <WhyNoCode />
+                <Benefits />
+                <Instructors />
+                <Testimonials />
               </div>
-              <Courses />
-              <WhyNoCode />
-              <Benefits />
-              <Instructors />
-              <Testimonials />
-            </div>
-          </>
-        } />
-        <Route path="*" element={<Navigate to="/" replace />} />
+            </>
+          }
+        />
+        <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
       {!isAuthPage && <Footer />}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
