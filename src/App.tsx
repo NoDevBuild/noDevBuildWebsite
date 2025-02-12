@@ -8,6 +8,8 @@ import { setUser, setInitialized } from './store/authSlice'
 import { setLoading, setCourses, setError } from './store/coursesSlice'
 import { RootState } from './store/store'
 import { scrollToTop } from './utils/helpers'
+
+// Components
 import Header from './components/Header'
 import Hero from './components/Hero'
 import WhyNoCode from './components/WhyNoCode'
@@ -17,11 +19,17 @@ import Benefits from './components/Benefits'
 import Testimonials from './components/Testimonials'
 import Footer from './components/Footer'
 import StartupBuilder from './components/StartupBuilder'
+
+// Pages
 import RegisterPage from './pages/RegisterPage'
 import LoginPage from './pages/LoginPage'
 import AdminPage from './pages/AdminPage'
 import CoursesPage from './pages/CoursesPage'
 import CourseDetailPage from './pages/CourseDetailPage'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsAndConditions from './pages/TermsAndConditions'
+import CancellationRefund from './pages/CancellationRefund'
+import ContactUs from './pages/ContactUs'
 
 function App() {
   const location = useLocation()
@@ -84,6 +92,10 @@ function App() {
         <Route path='/admin' element={<AdminPage />} />
         <Route path='/courses' element={<CoursesPage />} />
         <Route path='/courses/:courseId' element={<CourseDetailPage />} />
+        <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+        <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
+        <Route path='/cancellation-refund' element={<CancellationRefund />} />
+        <Route path='/contact' element={<ContactUs />} />
         <Route
           path='/'
           element={

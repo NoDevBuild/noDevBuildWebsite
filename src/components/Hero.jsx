@@ -4,7 +4,7 @@ import { ParticlesBackground } from './ParticlesBackground'
 import { useTypewriter } from '../hooks/useTypewriter'
 
 const Hero = () => {
-  const typedText = useTypewriter(['Faster', 'Smarter', 'Cheaper'], 100, 2000)
+  const typedText = useTypewriter(['Faster', 'Smarter', 'Cheaper'], 90, 2000)
   const navigate = useNavigate()
 
   const handleRegister = () => {

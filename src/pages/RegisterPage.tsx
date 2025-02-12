@@ -1,20 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { Newspaper, Rocket, Users, Wrench, BookOpen } from 'lucide-react';
 import Testimonials from '../components/Testimonials';
+import { paymentService } from '../services/paymentService';
+import { useToast } from '../contexts/ToastContext';
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth?.user);
+  const { showToast } = useToast();
 
-  const handlePlanSelect = (plan: 'annual' | 'lifetime') => {
-    localStorage.setItem('selectedPlan', plan);
-    
+  useEffect(() => {
+    // Load Razorpay script when component mounts
+    paymentService.loadRazorpay();
+  }, []);
+
+  const handlePlanSelect = async (plan: 'annual' | 'lifetime') => {
     if (!user) {
+      localStorage.setItem('selectedPlan', plan);
       navigate('/login');
       return;
+    }
+
+    try {
+      await paymentService.initiatePayment(plan, user);
+    } catch (error) {
+      console.error('Payment initiation failed:', error);
+      showToast('Failed to initiate payment. Please try again.', 'error');
     }
   };
 
@@ -47,9 +61,9 @@ const RegisterPage: React.FC = () => {
               <div className="mb-6 sm:mb-8">
                 <h3 className="text-xl sm:text-2xl font-bold text-[#1e293b] mb-3 sm:mb-4">Annual</h3>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-gray-400 line-through text-xl sm:text-2xl">$199.99</span>
-                  <span className="text-3xl sm:text-4xl font-bold text-[#1e293b]">$159</span>
-                  <span className="text-lg sm:text-xl text-gray-600">.99</span>
+                  <span className="text-gray-400 line-through text-xl sm:text-2xl">₹2,000</span>
+                  <span className="text-3xl sm:text-4xl font-bold text-[#1e293b]">₹1,800</span>
+                  <span className="text-lg sm:text-xl text-gray-600">/year</span>
                 </div>
               </div>
 
@@ -57,7 +71,7 @@ const RegisterPage: React.FC = () => {
                 onClick={() => handlePlanSelect('annual')}
                 className="w-full bg-[#1e293b] text-white rounded-lg py-3 sm:py-4 font-semibold hover:bg-[#334155] transition-colors text-base sm:text-lg"
               >
-                Select plan
+                {user ? 'Proceed to Checkout' : 'Select Plan'}
               </button>
             </div>
 
@@ -66,8 +80,8 @@ const RegisterPage: React.FC = () => {
               <div className="mb-6 sm:mb-8">
                 <h3 className="text-xl sm:text-2xl font-bold text-[#1e293b] mb-3 sm:mb-4">Lifetime</h3>
                 <div className="flex items-baseline">
-                  <span className="text-3xl sm:text-4xl font-bold text-[#1e293b]">$349</span>
-                  <span className="text-lg sm:text-xl text-gray-600">.00</span>
+                  <span className="text-gray-400 line-through text-xl sm:text-2xl">₹6,000</span>
+                  <span className="text-3xl sm:text-4xl font-bold text-[#1e293b]">₹5,000</span>
                 </div>
               </div>
 
@@ -75,7 +89,7 @@ const RegisterPage: React.FC = () => {
                 onClick={() => handlePlanSelect('lifetime')}
                 className="w-full bg-white text-[#1e293b] border-2 border-[#1e293b] rounded-lg py-3 sm:py-4 font-semibold hover:bg-gray-50 transition-colors text-base sm:text-lg"
               >
-                Select plan
+                {user ? 'Proceed to Checkout' : 'Select Plan'}
               </button>
             </div>
           </div>
