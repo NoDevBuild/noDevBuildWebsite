@@ -21,7 +21,6 @@ interface OrderDetails {
 const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID;
 const RAZORPAY_KEY_SECRET = import.meta.env.VITE_RAZORPAY_KEY_SECRET;
 
-// Moved error handling to the payment initiation
 export const paymentService = {
   loadRazorpay(): Promise<boolean> {
     return new Promise((resolve) => {
@@ -37,9 +36,9 @@ export const paymentService = {
     });
   },
 
-  async createOrder(userId: string, planType: 'annual' | 'lifetime'): Promise<string> {
+  async createOrder(userId: string, planType: 'annual' | 'lifetime'): Promise<{ orderId: string, amount: number }> {
     if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
-      throw new Error('Razorpay credentials are not configured. Please contact support.');
+      throw new Error('Payment system is not configured. Please contact support.');
     }
 
     // Amount in paise (multiply by 100)
@@ -78,20 +77,23 @@ export const paymentService = {
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Razorpay API Error:', errorData);
-        throw new Error(errorData.error?.description || 'Failed to create Razorpay order');
+        throw new Error(errorData.error?.description || 'Failed to create payment order');
       }
 
       const razorpayOrder = await response.json();
 
       // Update our order with Razorpay order ID
-      await updateDoc(orderRef, {
+      await updateDoc(doc(db, 'orders', orderRef.id), {
         razorpayOrderId: razorpayOrder.id
       });
 
-      return razorpayOrder.id;
-    } catch (error) {
+      return {
+        orderId: razorpayOrder.id,
+        amount
+      };
+    } catch (error: any) {
       console.error('Error creating order:', error);
-      throw error;
+      throw new Error(error.message || 'Failed to create payment order');
     }
   },
 
@@ -108,8 +110,7 @@ export const paymentService = {
       }
 
       // Create order
-      const orderId = await this.createOrder(user.uid, planType);
-      const amount = planType === 'annual' ? 180000 : 500000;
+      const { orderId, amount } = await this.createOrder(user.uid, planType);
 
       // Configure Razorpay
       const options = {
@@ -155,7 +156,7 @@ export const paymentService = {
 
       const razorpay = new window.Razorpay(options);
       razorpay.open();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Payment initiation failed:', error);
       throw error;
     }
