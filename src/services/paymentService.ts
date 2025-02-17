@@ -21,10 +21,7 @@ interface OrderDetails {
 const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID;
 const RAZORPAY_KEY_SECRET = import.meta.env.VITE_RAZORPAY_KEY_SECRET;
 
-if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
-  throw new Error('Razorpay credentials are not configured');
-}
-
+// Moved error handling to the payment initiation
 export const paymentService = {
   loadRazorpay(): Promise<boolean> {
     return new Promise((resolve) => {
@@ -41,6 +38,10 @@ export const paymentService = {
   },
 
   async createOrder(userId: string, planType: 'annual' | 'lifetime'): Promise<string> {
+    if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
+      throw new Error('Razorpay credentials are not configured. Please contact support.');
+    }
+
     // Amount in paise (multiply by 100)
     const amount = planType === 'annual' ? 180000 : 500000;
     
@@ -95,11 +96,15 @@ export const paymentService = {
   },
 
   async initiatePayment(planType: 'annual' | 'lifetime', user: any): Promise<void> {
+    if (!RAZORPAY_KEY_ID) {
+      throw new Error('Payment system is not configured. Please contact support.');
+    }
+
     try {
       // Ensure Razorpay is loaded
       const isLoaded = await this.loadRazorpay();
       if (!isLoaded) {
-        throw new Error('Failed to load Razorpay');
+        throw new Error('Failed to load payment system. Please try again.');
       }
 
       // Create order

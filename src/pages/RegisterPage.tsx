@@ -26,9 +26,9 @@ const RegisterPage: React.FC = () => {
 
     try {
       await paymentService.initiatePayment(plan, user);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Payment initiation failed:', error);
-      showToast('Failed to initiate payment. Please try again.', 'error');
+      showToast(error.message || 'Failed to initiate payment. Please try again.', 'error');
     }
   };
 
