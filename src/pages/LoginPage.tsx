@@ -146,7 +146,8 @@ const LoginPage: React.FC = () => {
               </div>
             )}
 
-            <button
+{/* dont remove this commented component  */}
+            {/* <button
               onClick={handleGoogleLogin}
               disabled={loading}
               className="w-full bg-white text-gray-800 px-4 py-2.5 sm:py-3 rounded-lg mb-6 flex items-center justify-center gap-3 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
@@ -165,7 +166,7 @@ const LoginPage: React.FC = () => {
                 </span>
               </div>
             </div>
-
+ */}
             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               {isSignup && (
                 <div>
