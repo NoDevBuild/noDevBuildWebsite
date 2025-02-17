@@ -18,6 +18,13 @@ interface OrderDetails {
   createdAt: string;
 }
 
+const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID;
+const RAZORPAY_KEY_SECRET = import.meta.env.VITE_RAZORPAY_KEY_SECRET;
+
+if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
+  throw new Error('Razorpay credentials are not configured');
+}
+
 export const paymentService = {
   loadRazorpay(): Promise<boolean> {
     return new Promise((resolve) => {
@@ -34,7 +41,8 @@ export const paymentService = {
   },
 
   async createOrder(userId: string, planType: 'annual' | 'lifetime'): Promise<string> {
-    const amount = planType === 'annual' ? 15999 : 34900;
+    // Amount in paise (multiply by 100)
+    const amount = planType === 'annual' ? 180000 : 500000;
     
     try {
       // First create our internal order
@@ -52,7 +60,7 @@ export const paymentService = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Basic ${btoa('rzp_test_YnSIMCh7wrkpos:XHQjUwORVAGgwp4tqLOjrSIq')}`
+          'Authorization': `Basic ${btoa(`${RAZORPAY_KEY_ID}:${RAZORPAY_KEY_SECRET}`)}`
         },
         body: JSON.stringify({
           amount,
@@ -79,7 +87,7 @@ export const paymentService = {
         razorpayOrderId: razorpayOrder.id
       });
 
-      return orderRef.id;
+      return razorpayOrder.id;
     } catch (error) {
       console.error('Error creating order:', error);
       throw error;
@@ -96,11 +104,11 @@ export const paymentService = {
 
       // Create order
       const orderId = await this.createOrder(user.uid, planType);
-      const amount = planType === 'annual' ? 1800 : 5000;
+      const amount = planType === 'annual' ? 180000 : 500000;
 
       // Configure Razorpay
       const options = {
-        key: 'rzp_test_YnSIMCh7wrkpos',
+        key: RAZORPAY_KEY_ID,
         amount,
         currency: 'INR',
         name: 'NoDev Build',
