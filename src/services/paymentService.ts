@@ -41,8 +41,15 @@ export const paymentService = {
       throw new Error('Payment system is not configured. Please contact support.');
     }
 
-    // Amount in paise (multiply by 100)
-    const amount = planType === 'annual' ? 180000 : 500000;
+    // Add validation for userId
+    if (!userId) {
+      throw new Error('User ID is required');
+    }
+
+    // Consider moving these to environment variables or a config file
+    const ANNUAL_AMOUNT = 180000;  // ₹1,800
+    const LIFETIME_AMOUNT = 500000; // ₹5,000
+    const amount = planType === 'annual' ? ANNUAL_AMOUNT : LIFETIME_AMOUNT;
     
     try {
       // First create our internal order
@@ -100,6 +107,11 @@ export const paymentService = {
   async initiatePayment(planType: 'annual' | 'lifetime', user: any): Promise<void> {
     if (!RAZORPAY_KEY_ID) {
       throw new Error('Payment system is not configured. Please contact support.');
+    }
+
+    // Add type safety for user parameter
+    if (!user?.uid) {
+      throw new Error('Invalid user object');
     }
 
     try {

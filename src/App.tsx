@@ -99,19 +99,16 @@ function App() {
         <Route
           path='/'
           element={
-            <>
+            <main className='bg-[#0d1117]'>
               <Hero />
-              <div className='relative w-full overflow-hidden'>
-                <div className='absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2'>
-                  <div className='w-[90vw] max-w-[800px] h-[400px] bg-purple-500/20 blur-[120px] rounded-full'></div>
-                </div>
+              <div className='bg-white'>
                 <Courses />
                 <WhyNoCode />
                 <Benefits />
                 <Instructors />
                 <Testimonials />
               </div>
-            </>
+            </main>
           }
         />
         <Route path='*' element={<Navigate to='/' replace />} />
