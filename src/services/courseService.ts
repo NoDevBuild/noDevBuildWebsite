@@ -1,5 +1,4 @@
-import { db } from '../lib/firebase';
-import { collection, doc, getDoc, getDocs, query, where, addDoc } from 'firebase/firestore';
+import api from './api';
 
 export interface Course {
   id: string;
@@ -35,70 +34,37 @@ export interface Course {
 export const courseService = {
   async getAllCourses(): Promise<Course[]> {
     try {
-      const coursesRef = collection(db, 'courses');
-      const snapshot = await getDocs(coursesRef);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Course[];
-    } catch (error) {
-      console.error('Error fetching courses:', error);
-      throw error;
+      const response = await api.get('/courses');
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.error || 'Failed to fetch courses');
     }
   },
 
-  async getCourseById(id: string): Promise<Course | null> {
+  async getCourseById(id: string): Promise<Course> {
     try {
-      const docRef = doc(db, 'courses', id);
-      const docSnap = await getDoc(docRef);
-      
-      if (!docSnap.exists()) {
-        return null;
-      }
-
-      return {
-        id: docSnap.id,
-        ...docSnap.data()
-      } as Course;
-    } catch (error) {
-      console.error('Error fetching course by ID:', error);
-      throw error;
+      const response = await api.get(`/courses/${id}`);
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.error || 'Failed to fetch course');
     }
   },
 
-  async getCourseBySlug(slug: string): Promise<Course | null> {
+  async getCourseBySlug(slug: string): Promise<Course> {
     try {
-      const coursesRef = collection(db, 'courses');
-      const q = query(coursesRef, where('slug', '==', slug));
-      const snapshot = await getDocs(q);
-      
-      if (snapshot.empty) {
-        return null;
-      }
-
-      const doc = snapshot.docs[0];
-      return {
-        id: doc.id,
-        ...doc.data()
-      } as Course;
-    } catch (error) {
-      console.error('Error fetching course by slug:', error);
-      throw error;
+      const response = await api.get(`/courses/slug/${slug}`);
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.error || 'Failed to fetch course');
     }
   },
 
-  async addCourse(course: Omit<Course, 'id'>): Promise<string> {
+  async createCourse(course: Omit<Course, 'id'>): Promise<Course> {
     try {
-      const coursesRef = collection(db, 'courses');
-      const docRef = await addDoc(coursesRef, {
-        ...course,
-        slug: course.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-        createdAt: new Date().toISOString()
-      });
-      return docRef.id;
-    } catch (error) {
-      console.error('Error adding course:', error);
-      throw error;
+      const response = await api.post('/courses', course);
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.error || 'Failed to create course');
     }
   }
 };

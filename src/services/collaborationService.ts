@@ -1,5 +1,4 @@
-import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import api from './api';
 
 interface CollaborationEnquiry {
   email: string;
@@ -8,20 +7,10 @@ interface CollaborationEnquiry {
 
 export const collaborationService = {
   async submitEnquiry(email: string): Promise<void> {
-    if (!email || !email.includes('@')) {
-      throw new Error('Invalid email address');
-    }
-
-    const enquiry: CollaborationEnquiry = {
-      email,
-      enquiryDate: new Date().toISOString()
-    };
-
     try {
-      await addDoc(collection(db, 'collaborationEnquiries'), enquiry);
-    } catch (error) {
-      console.error('Error submitting collaboration enquiry:', error);
-      throw new Error('Failed to submit enquiry');
+      await api.post('/collaboration/enquiries', { email });
+    } catch (error: any) {
+      throw new Error(error.response?.data?.error || 'Failed to submit enquiry');
     }
   }
 };

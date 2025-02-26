@@ -7,6 +7,9 @@ import { ToastProvider } from './contexts/ToastContext';
 import App from './App.tsx';
 import './index.css';
 
+// Initialize Firebase first
+import './lib/firebase';
+
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
 

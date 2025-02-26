@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import { Clock } from 'lucide-react';
-import { collection, getDocs, query, limit } from 'firebase/firestore';
-import { db } from '../lib/firebase';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading, setCourses, setError } from '../store/coursesSlice';
 import { getImageUrl } from '../utils/helpers';
+import { courseService } from '../services/courseService';
 
 const Courses = () => {
   const dispatch = useDispatch();
@@ -15,13 +14,7 @@ const Courses = () => {
     const fetchCourses = async () => {
       dispatch(setLoading(true));
       try {
-        const coursesRef = collection(db, 'courses');
-        const q = query(coursesRef, limit(6));
-        const snapshot = await getDocs(q);
-        const coursesData = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
+        const coursesData = await courseService.getAllCourses();
         dispatch(setCourses(coursesData));
       } catch (err) {
         dispatch(setError('Failed to load courses'));
@@ -90,25 +83,25 @@ const Courses = () => {
                     loading="lazy"
                   />
                 </div>
-                <div className="absolute top-2 right-2 flex flex-col gap-2 z-10">
+                <div className="absolute -top-2 -right-2 flex flex-col gap-2">
                   {course.isNew && (
-                    <div className="flex items-center gap-1 sm:gap-2 bg-gradient-to-r from-orange-400 to-pink-500 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-sm">
+                    <div className="flex items-center gap-1 sm:gap-2 bg-gradient-to-r from-orange-400 to-pink-500 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full">
                       <img 
                         src="https://cdn.prod.website-files.com/5e6aa3e3f001fad873b8e1f5/65faef38088ecbd4842aed36_stars-03.avif" 
                         alt="" 
                         className="w-3 sm:w-3.5 h-3 sm:h-3.5"
                       />
-                      <span className="text-[10px] sm:text-xs font-bold whitespace-nowrap">New</span>
+                      <span className="text-[10px] sm:text-xs font-bold">New</span>
                     </div>
                   )}
                   {course.isTrending && (
-                    <div className="flex items-center gap-1 sm:gap-2 bg-gradient-to-r from-green-400 to-cyan-500 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-sm">
+                    <div className="flex items-center gap-1 sm:gap-2 bg-gradient-to-r from-green-400 to-cyan-500 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full">
                       <img 
                         src="https://cdn.prod.website-files.com/5e6aa3e3f001fad873b8e1f5/664b0d08d4c57c99791347e2_breakpoint3.svg" 
                         alt="" 
                         className="w-3 sm:w-3.5 h-3 sm:h-3.5"
                       />
-                      <span className="text-[10px] sm:text-xs font-bold whitespace-nowrap">Trending</span>
+                      <span className="text-[10px] sm:text-xs font-bold">Trending</span>
                     </div>
                   )}
                 </div>

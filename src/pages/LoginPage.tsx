@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, LogIn, User } from 'lucide-react';
 import AmongUsParticles from '../components/AmongUsParticles';
-import { auth, googleProvider } from '../lib/firebase';
-import { signInWithEmailAndPassword, signInWithPopup, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useDispatch, useSelector } from 'react-redux';
-import { setError, setLoading } from '../store/authSlice';
+import { setError, setLoading, setUser } from '../store/authSlice';
 import { RootState } from '../store/store';
+import { authService } from '../services/authService';
 
 const LoginPage: React.FC = () => {
   const [isSignup, setIsSignup] = useState(false);
@@ -40,76 +39,16 @@ const LoginPage: React.FC = () => {
           return;
         }
 
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        await updateProfile(userCredential.user, {
-          displayName: fullName
-        });
-        
+        const user = await authService.register(email, password, fullName);
+        dispatch(setUser(user));
         navigate('/');
       } else {
-        await signInWithEmailAndPassword(auth, email, password);
+        const user = await authService.login(email, password);
+        dispatch(setUser(user));
         navigate('/');
       }
     } catch (error: any) {
-      let errorMessage = 'An error occurred. Please try again.';
-      
-      switch (error.code) {
-        case 'auth/email-already-in-use':
-          errorMessage = 'This email is already registered. Please sign in instead.';
-          break;
-        case 'auth/invalid-email':
-          errorMessage = 'Please enter a valid email address.';
-          break;
-        case 'auth/operation-not-allowed':
-          errorMessage = 'Email/password accounts are not enabled. Please contact support.';
-          break;
-        case 'auth/weak-password':
-          errorMessage = 'Please choose a stronger password.';
-          break;
-        case 'auth/user-disabled':
-          errorMessage = 'This account has been disabled. Please contact support.';
-          break;
-        case 'auth/user-not-found':
-        case 'auth/wrong-password':
-        case 'auth/invalid-login-credentials':
-          errorMessage = 'Invalid Login Details. Please try again.';
-          break;
-      }
-      
-      dispatch(setError(errorMessage));
-    } finally {
-      dispatch(setLoading(false));
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    dispatch(setLoading(true));
-    dispatch(setError(null));
-    
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      if (result.user) {
-        navigate('/');
-      }
-    } catch (error: any) {
-      let errorMessage = 'Failed to sign in with Google. Please try again.';
-      
-      switch (error.code) {
-        case 'auth/popup-closed-by-user':
-          errorMessage = 'Sign in was cancelled. Please try again.';
-          break;
-        case 'auth/cancelled-popup-request':
-          errorMessage = 'Only one popup request allowed at a time.';
-          break;
-        case 'auth/popup-blocked':
-          errorMessage = 'Popup was blocked by your browser. Please enable popups or try again.';
-          break;
-        case 'auth/account-exists-with-different-credential':
-          errorMessage = 'An account already exists with the same email address but different sign-in credentials.';
-          break;
-      }
-      
-      dispatch(setError(errorMessage));
+      dispatch(setError(error.message));
     } finally {
       dispatch(setLoading(false));
     }
@@ -122,6 +61,23 @@ const LoginPage: React.FC = () => {
     setPassword('');
     setConfirmPassword('');
     setFullName('');
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      dispatch(setError('Please enter your email address'));
+      return;
+    }
+
+    dispatch(setLoading(true));
+    try {
+      await authService.resetPassword(email);
+      dispatch(setError('Password reset link has been sent to your email'));
+    } catch (error: any) {
+      dispatch(setError(error.message));
+    } finally {
+      dispatch(setLoading(false));
+    }
   };
 
   return (
@@ -146,27 +102,6 @@ const LoginPage: React.FC = () => {
               </div>
             )}
 
-{/* dont remove this commented component  */}
-            {/* <button
-              onClick={handleGoogleLogin}
-              disabled={loading}
-              className="w-full bg-white text-gray-800 px-4 py-2.5 sm:py-3 rounded-lg mb-6 flex items-center justify-center gap-3 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-            >
-              <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="font-medium">Continue with Google</span>
-            </button>
-
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-500"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 text-gray-400 bg-transparent backdrop-blur-md text-xs sm:text-sm">
-                  Or continue with email
-                </span>
-              </div>
-            </div>
- */}
             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               {isSignup && (
                 <div>
@@ -257,9 +192,13 @@ const LoginPage: React.FC = () => {
                       Remember me
                     </label>
                   </div>
-                  <a href="#" className="text-purple-400 hover:text-purple-300 text-sm">
+                  <button 
+                    type="button"
+                    onClick={handleForgotPassword}
+                    className="text-purple-400 hover:text-purple-300 text-sm"
+                  >
                     Forgot password?
-                  </a>
+                  </button>
                 </div>
               )}
 

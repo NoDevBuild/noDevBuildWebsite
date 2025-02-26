@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { collection, writeBatch, doc } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { courseService } from '../services/courseService';
 import { Course } from '../services/courseService';
 
 const AdminPage = () => {
@@ -32,24 +31,10 @@ const AdminPage = () => {
         throw new Error('Maximum 500 courses can be added at once');
       }
 
-      // Create a batch write
-      const batch = writeBatch(db);
-      const coursesRef = collection(db, 'courses');
-
-      // Add each course to the batch
-      courses.forEach((course) => {
-        const newCourseRef = doc(coursesRef);
-        batch.set(newCourseRef, {
-          ...course,
-          // Generate a slug from the title
-          slug: course.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-          // Add timestamp
-          createdAt: new Date().toISOString()
-        });
-      });
-
-      // Commit the batch
-      await batch.commit();
+      // Add courses through the API
+      for (const course of courses) {
+        await courseService.createCourse(course);
+      }
       
       setSuccess(true);
       setCoursesJson('');
