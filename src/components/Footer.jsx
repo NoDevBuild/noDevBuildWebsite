@@ -141,8 +141,7 @@ const Footer = () => {
           {/* Logo and Social Links */}
           <div>
             <div className="flex items-center mb-4">
-              <img src="/noDevBuild-logo.png" alt="noDevBuild" className="h-8 w-auto" />
-              <span className="ml-2 text-xl font-bold">noDevBuild</span>
+              <img src="/online_logo.png" alt="noDevBuild" className="h-16 w-auto" />
             </div>
             <p className="text-gray-400 mb-4">
               Empowering the next generation of no-code developers and AI specialists.
