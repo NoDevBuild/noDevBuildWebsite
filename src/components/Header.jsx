@@ -103,13 +103,12 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed w-full top-0 z-50">
+    <header className='fixed w-full top-0 z-50 max-w-screen'>
       <div className="bg-white shadow-sm relative z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center">
-              <img src="/noDevBuild-logo.png" alt="noDevBuild" className="h-8 w-auto" />
-              <span className="ml-2 text-xl font-bold text-gray-900">noDevBuild</span>
+              <img src="/main_logo.png" alt="noDevBuild" className="h-16 w-auto" />
             </Link>
 
             {/* Desktop Navigation */}
@@ -127,7 +126,7 @@ const Header = () => {
                 {showCoursesMenu && (
                   <div 
                     ref={menuRef}
-                    className="absolute top-full left-0 w-[600px] bg-white rounded-lg shadow-lg py-6 mt-1 -translate-x-1/4"
+                    className='absolute top-full left-0 w-[600px] bg-white rounded-lg shadow-lg py-6 mt-1 -translate-x-1/4 z-50'
                   >
                     <div className="px-6 mb-4">
                       <h3 className="text-lg font-semibold text-gray-900">Courses</h3>
@@ -204,7 +203,7 @@ const Header = () => {
                   {showUserMenu && (
                     <div
                       ref={userMenuRef}
-                      className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 border border-gray-100"
+                      className='absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 border border-gray-100 z-50'
                     >
                       <div className="px-4 py-2 border-b">
                         <p className="text-sm font-medium text-gray-900">

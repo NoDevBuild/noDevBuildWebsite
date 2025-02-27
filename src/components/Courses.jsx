@@ -83,9 +83,9 @@ const Courses = () => {
                     loading="lazy"
                   />
                 </div>
-                <div className="absolute -top-2 -right-2 flex flex-col gap-2">
+                <div className="absolute -top-2 -right-2 flex flex-col gap-2 z-10">
                   {course.isNew && (
-                    <div className="flex items-center gap-1 sm:gap-2 bg-gradient-to-r from-orange-400 to-pink-500 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full">
+                    <div className="flex items-center gap-1 sm:gap-2 bg-gradient-to-r from-orange-400 to-pink-500 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-sm">
                       <img 
                         src="https://cdn.prod.website-files.com/5e6aa3e3f001fad873b8e1f5/65faef38088ecbd4842aed36_stars-03.avif" 
                         alt="" 
@@ -95,13 +95,13 @@ const Courses = () => {
                     </div>
                   )}
                   {course.isTrending && (
-                    <div className="flex items-center gap-1 sm:gap-2 bg-gradient-to-r from-green-400 to-cyan-500 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full">
+                    <div className="flex items-center gap-1 sm:gap-2 bg-gradient-to-r from-green-400 to-cyan-500 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-sm">
                       <img 
                         src="https://cdn.prod.website-files.com/5e6aa3e3f001fad873b8e1f5/664b0d08d4c57c99791347e2_breakpoint3.svg" 
                         alt="" 
                         className="w-3 sm:w-3.5 h-3 sm:h-3.5"
                       />
-                      <span className="text-[10px] sm:text-xs font-bold">Trending</span>
+                       <span className="text-[10px] sm:text-xs font-bold whitespace-nowrap">New</span>
                     </div>
                   )}
                 </div>
