@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown, LogOut, Settings, User, BookOpen, Menu, X, Rocket } from 'lucide-react';
+import { ChevronDown, LogOut, Settings, User, BookOpen, Menu, X, Rocket, Database } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { signOut } from 'firebase/auth';
@@ -165,6 +165,18 @@ const Header = () => {
                 )}
               </div>
               <Link 
+                to="/ai-tools" 
+                className={`text-gray-700 hover:text-blue-600 ${location.pathname.startsWith('/ai-tools') ? 'text-blue-600' : ''}`}
+              >
+                AI Tools
+              </Link>
+              <Link 
+                to="/investors" 
+                className={`text-gray-700 hover:text-blue-600 ${location.pathname === '/investors' ? 'text-blue-600' : ''}`}
+              >
+                Investors
+              </Link>
+              <Link 
                 to="/startup-builder" 
                 className={`text-gray-700 hover:text-blue-600 ${location.pathname === '/startup-builder' ? 'text-blue-600' : ''}`}
               >
@@ -329,6 +341,24 @@ const Header = () => {
                 >
                   <BookOpen className="h-5 w-5 mr-3 text-gray-500" />
                   Courses
+                </Link>
+
+                <Link
+                  to="/ai-tools"
+                  className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg"
+                  onClick={() => setShowMobileMenu(false)}
+                >
+                  <Database className="h-5 w-5 mr-3 text-gray-500" />
+                  AI Tools
+                </Link>
+
+                <Link
+                  to="/investors"
+                  className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg"
+                  onClick={() => setShowMobileMenu(false)}
+                >
+                  <User className="h-5 w-5 mr-3 text-gray-500" />
+                  Investors
                 </Link>
 
                 <Link

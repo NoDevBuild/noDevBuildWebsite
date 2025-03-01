@@ -28,6 +28,11 @@ import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsAndConditions from './pages/TermsAndConditions'
 import CancellationRefund from './pages/CancellationRefund'
 import ContactUs from './pages/ContactUs'
+import AIToolsPage from './pages/AIToolsPage'
+import AIToolDetailPage from './pages/AIToolDetailPage'
+import InvestorsDirectoryPage from './pages/InvestorsDirectoryPage'
+import UserDashboardPage from './pages/UserDashboardPage'
+import UserMembershipPage from './pages/UserMembershipPage'
 
 
 function App() {
@@ -35,6 +40,7 @@ function App() {
   const dispatch = useDispatch();
   const { initialized } = useSelector((state: RootState) => state.auth);
   const isAuthPage = ['/login'].includes(location.pathname);
+  const isDashboardPage = location.pathname.startsWith('/dashboard');
 
   // Scroll to top on route change
   useEffect(() => {
@@ -79,7 +85,7 @@ function App() {
 
   return (
     <div className='min-h-screen bg-[#0d1117]'>
-      {!isAuthPage && <Header />}
+      {!isAuthPage && !isDashboardPage && <Header />}
       <Routes>
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
@@ -91,6 +97,11 @@ function App() {
         <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
         <Route path='/cancellation-refund' element={<CancellationRefund />} />
         <Route path='/contact' element={<ContactUs />} />
+        <Route path='/ai-tools' element={<AIToolsPage />} />
+        <Route path='/ai-tools/:id' element={<AIToolDetailPage />} />
+        <Route path='/investors' element={<InvestorsDirectoryPage />} />
+        <Route path='/dashboard' element={<UserDashboardPage />} />
+        <Route path='/dashboard/membership' element={<UserMembershipPage />} />
         <Route
           path='/'
           element={
@@ -108,7 +119,7 @@ function App() {
         />
         <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
-      {!isAuthPage && <Footer />}
+      {!isAuthPage && !isDashboardPage && <Footer />}
     </div>
   );
 }
