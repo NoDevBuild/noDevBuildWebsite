@@ -233,39 +233,46 @@ const Footer = () => {
           <div className="md:col-span-1">
             {user ? (
               <>
-                <div className="space-y-4">
-                  <h3 className="text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-pulse">
-                    🚀 Build something amazing With Us!
-                  </h3>
-                  <div className="space-y-4">
-                    <p className="text-xl font-medium text-white">
-                      Ready to bring your ideas to life?
-                    </p>
-                    <p className="text-gray-400 text-lg">
-                      Join our Founders Hub and get expert guidance on your startup journey.
-                    </p>
-                    <div className="flex flex-col space-y-4">
-                      <div className="space-y-2">
-                        <input
-                          type="email"
-                          placeholder="Enter your email"
-                          value={email}
-                          onChange={handleEmailChange}
-                          onKeyPress={(e) => handleKeyPress(e, handleCollaboration)}
-                          className={`w-full px-4 py-3 rounded-lg bg-gray-800/50 backdrop-blur-sm border ${
-                            emailError ? 'border-red-500' : 'border-gray-700'
-                          } focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-400`}
-                        />
-                        {emailError && (
-                          <p className="text-red-500 text-sm">{emailError}</p>
-                        )}
+                <div className="space-y-4 relative">
+                  {/* Fluid background glow */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-xl blur-xl"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 via-blue-900/10 to-purple-900/10 rounded-xl animate-pulse"></div>
+                  
+                  {/* Content */}
+                  <div className="relative z-10 p-6 rounded-xl backdrop-blur-sm border border-white/10">
+                    <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+                      🚀 Build something amazing With Us!
+                    </h3>
+                    <div className="space-y-4 mt-4">
+                      <p className="text-xl font-medium text-white">
+                        Ready to bring your ideas to life?
+                      </p>
+                      <p className="text-gray-400 text-lg">
+                        Join our Founders Hub and get expert guidance on your startup journey.
+                      </p>
+                      <div className="flex flex-col space-y-4">
+                        <div className="space-y-2">
+                          <input
+                            type="email"
+                            placeholder="Enter your email"
+                            value={email}
+                            onChange={handleEmailChange}
+                            onKeyPress={(e) => handleKeyPress(e, handleCollaboration)}
+                            className={`w-full px-4 py-3 rounded-lg bg-gray-800/50 backdrop-blur-sm border ${
+                              emailError ? 'border-red-500' : 'border-gray-700'
+                            } focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-400`}
+                          />
+                          {emailError && (
+                            <p className="text-red-500 text-sm">{emailError}</p>
+                          )}
+                        </div>
+                        <button 
+                          onClick={handleCollaboration}
+                          className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-500 hover:to-pink-500 transition-all duration-200 transform hover:scale-[1.02] font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Let's Build Together! 🚀
+                        </button>
                       </div>
-                      <button 
-                        onClick={handleCollaboration}
-                        className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-500 hover:to-pink-500 transition-all duration-200 transform hover:scale-[1.02] font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        Let's Build Together! 🚀
-                      </button>
                     </div>
                   </div>
                 </div>

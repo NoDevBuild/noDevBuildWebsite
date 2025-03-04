@@ -17,6 +17,7 @@ import Benefits from './components/Benefits'
 import Testimonials from './components/Testimonials'
 import Footer from './components/Footer'
 import StartupBuilder from './components/StartupBuilder'
+import InvestorsSection from './components/InvestorsSection'
 
 // Pages
 import RegisterPage from './pages/RegisterPage'
@@ -33,7 +34,6 @@ import AIToolDetailPage from './pages/AIToolDetailPage'
 import InvestorsDirectoryPage from './pages/InvestorsDirectoryPage'
 import UserDashboardPage from './pages/UserDashboardPage'
 import UserMembershipPage from './pages/UserMembershipPage'
-
 
 function App() {
   const location = useLocation();
@@ -111,6 +111,7 @@ function App() {
                 <Courses />
                 <WhyNoCode />
                 <Benefits />
+                <InvestorsSection />
                 <Instructors />
                 <Testimonials />
               </div>

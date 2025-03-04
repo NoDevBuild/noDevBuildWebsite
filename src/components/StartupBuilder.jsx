@@ -171,17 +171,24 @@ const StartupBuilder = () => {
 
           {/* CTA Section */}
           <div className="mt-20 text-center px-4">
-            <div className="inline-block bg-gradient-to-r from-purple-900/50 to-blue-900/50 backdrop-blur-sm rounded-2xl p-6 md:p-8 w-full max-w-2xl border border-white/10">
-              <h2 className="text-xl md:text-2xl font-bold mb-4">Ready to Start Your Journey?</h2>
-              <p className="text-gray-300 text-sm md:text-base mb-6">
-                Join hundreds of founders who've already launched successful startups through our program.
-              </p>
-              <button 
-                onClick={() => navigate('/register')}
-                className="px-6 md:px-8 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 text-sm md:text-base"
-              >
-                Join the Founders' Hub
-              </button>
+            <div className="inline-block relative p-6 md:p-8 w-full max-w-2xl">
+              {/* Fluid background glow */}
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-2xl blur-xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-blue-900/20 to-purple-900/20 rounded-2xl animate-pulse"></div>
+              
+              {/* Content */}
+              <div className="relative z-10 backdrop-blur-sm border border-white/10 p-6 md:p-8 rounded-2xl">
+                <h2 className="text-xl md:text-2xl font-bold mb-4 bg-gradient-to-r from-white to-purple-100 bg-clip-text text-transparent">Ready to Start Your Journey?</h2>
+                <p className="text-gray-300 text-sm md:text-base mb-6">
+                  Join hundreds of founders who've already launched successful startups through our program.
+                </p>
+                <button 
+                  onClick={() => navigate('/register')}
+                  className="px-6 md:px-8 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 text-sm md:text-base"
+                >
+                  Join the Founders' Hub
+                </button>
+              </div>
             </div>
           </div>
         </div>

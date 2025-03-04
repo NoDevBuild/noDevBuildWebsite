@@ -74,6 +74,7 @@ const Testimonials = () => {
                         src={testimonial.image}
                         alt={testimonial.name}
                         className="w-12 h-12 rounded-full object-cover mr-4"
+                        loading="lazy"
                       />
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">{testimonial.name}</h3>
@@ -102,6 +103,7 @@ const Testimonials = () => {
                         src={testimonial.image}
                         alt={testimonial.name}
                         className="w-12 h-12 rounded-full object-cover mr-4"
+                        loading="lazy"
                       />
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">{testimonial.name}</h3>

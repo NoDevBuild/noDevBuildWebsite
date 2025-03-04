@@ -16,7 +16,7 @@ const instructors = [
   {
     name: 'Maria Rodriguez',
     title: 'Product Strategy Expert',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80',
+    image: 'https://images.unsplash.com/photo-1438761681033-6440ffad8d80',
     bio: 'Ex-Product Lead at Airbnb. Specializes in product strategy and go-to-market execution.'
   }
 ];
@@ -31,12 +31,18 @@ const Instructors = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {instructors.map((instructor, index) => (
-            <div key={index} className="text-center">
-              <img
-                src={instructor.image}
-                alt={instructor.name}
-                className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
-              />
+            <div 
+              key={index} 
+              className="text-center transform transition-transform duration-300 hover:translate-y-[-4px]"
+            >
+              <div className="relative mb-4 mx-auto w-32 h-32 rounded-full overflow-hidden">
+                <img
+                  src={instructor.image}
+                  alt={instructor.name}
+                  className="w-full h-full object-cover transform transition-transform duration-300 hover:scale-110"
+                  loading="lazy"
+                />
+              </div>
               <h3 className="text-xl font-semibold text-gray-900">{instructor.name}</h3>
               <p className="text-blue-600 mb-2">{instructor.title}</p>
               <p className="text-gray-600">{instructor.bio}</p>

@@ -234,7 +234,8 @@ const InvestorsDirectoryPage = () => {
               onChange={(e) => setSelectedIndustry(e.target.value)}
               className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option value="">Filter by industry...</option>
+              <option value="">All Industries</option>
+              <option value="none">None</option>
               {industries.map((industry) => (
                 <option key={industry} value={industry}>{industry}</option>
               ))}
