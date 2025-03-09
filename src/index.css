@@ -107,3 +107,33 @@
 .animation-delay-4000 {
   animation-delay: 4s;
 }
+
+/* Add smooth scrolling behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Add snap scrolling */
+.snap-container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  position: relative;
+}
+
+.snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  height: 100vh;
+  position: relative;
+}
+
+/* Hide scrollbar but keep functionality */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}

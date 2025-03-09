@@ -42,6 +42,7 @@ function App() {
   const { initialized } = useSelector((state: RootState) => state.auth);
   const isAuthPage = ['/login'].includes(location.pathname);
   const isDashboardPage = location.pathname.startsWith('/dashboard');
+  const isPitchDeckPage = location.pathname === '/pitch-deck';
 
   // Scroll to top on route change
   useEffect(() => {
@@ -86,7 +87,7 @@ function App() {
 
   return (
     <div className='min-h-screen bg-[#0d1117]'>
-      {!isAuthPage && !isDashboardPage && <Header />}
+      {!isAuthPage && !isDashboardPage && !isPitchDeckPage && <Header />}
       <Routes>
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
@@ -122,7 +123,7 @@ function App() {
         />
         <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
-      {!isAuthPage && !isDashboardPage && <Footer />}
+      {!isAuthPage && !isDashboardPage && !isPitchDeckPage && <Footer />}
     </div>
   );
 }
