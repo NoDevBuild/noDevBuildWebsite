@@ -34,6 +34,7 @@ import AIToolDetailPage from './pages/AIToolDetailPage'
 import InvestorsDirectoryPage from './pages/InvestorsDirectoryPage'
 import UserDashboardPage from './pages/UserDashboardPage'
 import UserMembershipPage from './pages/UserMembershipPage'
+import PitchDeck from './pages/PitchDeck'
 
 function App() {
   const location = useLocation();
@@ -90,6 +91,7 @@ function App() {
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
         <Route path='/startup-builder' element={<StartupBuilder />} />
+        <Route path='/pitch-deck' element={<PitchDeck />} />
         <Route path='/admin' element={<AdminPage />} />
         <Route path='/courses' element={<CoursesPage />} />
         <Route path='/courses/:courseId' element={<CourseDetailPage />} />
