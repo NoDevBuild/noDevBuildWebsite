@@ -5,15 +5,18 @@ import { ChevronDown } from 'lucide-react';
 // Import slide components
 import CoverSlide from '../components/pitchdeckSlidesSections/CoverSlide';
 import VisionSlide from '../components/pitchdeckSlidesSections/VisionSlide';
+import NoDevBuildIntersection from '../components/pitchdeckSlidesSections/NoDevBuildIntersection';
 import ProblemSolutionSlide from '../components/pitchdeckSlidesSections/ProblemSolutionSlide';
 import BuildLaunchSlide from '../components/pitchdeckSlidesSections/BuildLaunchSlide';
+import UpskillSlide from '../components/pitchdeckSlidesSections/UpskillSlide';
 import MarketOpportunitySlide from '../components/pitchdeckSlidesSections/MarketOpportunitySlide';
+import FounderEcosystemSlide from '../components/pitchdeckSlidesSections/FounderEcosystemSlide';
 import ContactSlide from '../components/pitchdeckSlidesSections/ContactSlide';
 
 const PitchDeck = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const totalSlides = 6;
+  const totalSlides = 9; // Updated to include new slide
 
   useEffect(() => {
     const container = containerRef.current;
@@ -92,9 +95,12 @@ const PitchDeck = () => {
 
       <div ref={containerRef} className="snap-container hide-scrollbar">
         <CoverSlide currentSlide={currentSlide} />
+        <NoDevBuildIntersection />
         <VisionSlide />
-        <ProblemSolutionSlide />
+        <UpskillSlide />
         <BuildLaunchSlide />
+        <FounderEcosystemSlide />
+        <ProblemSolutionSlide />        
         <MarketOpportunitySlide />
         <ContactSlide />
       </div>

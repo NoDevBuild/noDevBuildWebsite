@@ -1,85 +1,93 @@
 import React from 'react';
-import { Rocket, Code, Laptop, Bot, ArrowRight } from 'lucide-react';
+import { Rocket, Zap, Bot, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const BuildLaunchSlide = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="snap-section flex items-center py-20 relative overflow-hidden">
+    <section className="snap-section flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-white to-gray-50">
+      {/* Decorative background elements */}
       <div className="absolute inset-0">
-        <div className="absolute -left-4 -top-4 w-72 h-72 bg-blue-500/30 rounded-full mix-blend-multiply opacity-70 animate-blob"></div>
-        <div className="absolute -right-4 -top-4 w-72 h-72 bg-purple-500/30 rounded-full mix-blend-multiply opacity-70 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500/30 rounded-full mix-blend-multiply opacity-70 animate-blob animation-delay-4000"></div>
+        <div className="absolute -left-4 -top-4 w-72 h-72 bg-purple-100 rounded-full mix-blend-multiply opacity-70 animate-blob"></div>
+        <div className="absolute -right-4 -top-4 w-72 h-72 bg-blue-100 rounded-full mix-blend-multiply opacity-70 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-100 rounded-full mix-blend-multiply opacity-70 animate-blob animation-delay-4000"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-8">
-            <Rocket className="w-5 h-5 text-purple-400" />
-            <span className="text-purple-400 text-sm font-medium">Build & Launch</span>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-50 to-blue-50 rounded-full mb-4 border border-purple-100">
+            <Rocket className="w-5 h-5 text-purple-600" />
+            <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent font-semibold">
+              Build • Launch • Scale
+            </span>
           </div>
           
-          <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
-            Build & Launch MVPs with NoDevBuild!
-          </h2>
+          <div className="space-y-2">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">
+              Bring Your Ideas to Life
+            </h2>
+            <div className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Without Writing Code
+            </div>
+          </div>
           
-          <p className="text-3xl text-gray-300 max-w-3xl mx-auto mb-4">
-            No Code. No Limits. Just Build.
-          </p>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Turn your idea into a fully functional AI-powered product – without writing a single line of code!
+          <p className="text-base sm:text-lg text-gray-600 max-w-xl mx-auto mt-4 mb-8">
+            Transform your vision into a fully functional AI-powered product in days, not months.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          {/* Build Card */}
           <div className="group relative">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8">
-              <div className="flex items-center justify-between mb-6">
-                <div className="p-3 rounded-lg bg-gradient-to-br from-purple-500/20 to-blue-500/20">
-                  <Code className="w-8 h-8 text-purple-400" />
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-blue-100 rounded-2xl transform transition-transform group-hover:scale-105 duration-500"></div>
+            <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-purple-100 h-full transform transition-all duration-500 group-hover:translate-y-[-4px]">
+              <div className="mb-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center transform rotate-12 group-hover:rotate-0 transition-transform duration-300">
+                  <Zap className="w-5 h-5 text-white transform -rotate-12 group-hover:rotate-0 transition-transform duration-300" />
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-100 mb-4">No-Code + AI</h3>
-              <p className="text-gray-300">Build smarter, faster with our integrated no-code and AI tools.</p>
-              <div className="mt-6 flex flex-wrap gap-2">
-                <span className="px-3 py-1 bg-purple-500/20 rounded-full text-purple-300 text-sm">Visual Building</span>
-                <span className="px-3 py-1 bg-blue-500/20 rounded-full text-blue-300 text-sm">AI Integration</span>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Build</h3>
+              <p className="text-sm text-gray-600 mb-3">Create powerful applications with our no-code tools and AI integration.</p>
+              <div className="flex flex-wrap gap-1">
+                <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">Visual Builder</span>
+                <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">AI Integration</span>
               </div>
             </div>
           </div>
 
+          {/* Launch Card */}
           <div className="group relative">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-green-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8">
-              <div className="flex items-center justify-between mb-6">
-                <div className="p-3 rounded-lg bg-gradient-to-br from-blue-500/20 to-green-500/20">
-                  <Laptop className="w-8 h-8 text-blue-400" />
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-2xl transform transition-transform group-hover:scale-105 duration-500"></div>
+            <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-blue-100 h-full transform transition-all duration-500 group-hover:translate-y-[-4px]">
+              <div className="mb-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center transform rotate-12 group-hover:rotate-0 transition-transform duration-300">
+                  <Rocket className="w-5 h-5 text-white transform -rotate-12 group-hover:rotate-0 transition-transform duration-300" />
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-100 mb-4">MVP in Weeks</h3>
-              <p className="text-gray-300">From idea to launch, hassle-free development process.</p>
-              <div className="mt-6 flex flex-wrap gap-2">
-                <span className="px-3 py-1 bg-blue-500/20 rounded-full text-blue-300 text-sm">Rapid Development</span>
-                <span className="px-3 py-1 bg-green-500/20 rounded-full text-green-300 text-sm">Quick Launch</span>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Launch</h3>
+              <p className="text-sm text-gray-600 mb-3">Go from idea to live product in days, not months. Launch faster than ever.</p>
+              <div className="flex flex-wrap gap-1">
+                <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Rapid MVP</span>
+                <span className="px-2 py-0.5 bg-cyan-100 text-cyan-700 rounded-full text-xs font-medium">Quick Deploy</span>
               </div>
             </div>
           </div>
 
+          {/* Scale Card */}
           <div className="group relative">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-green-600 to-purple-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8">
-              <div className="flex items-center justify-between mb-6">
-                <div className="p-3 rounded-lg bg-gradient-to-br from-green-500/20 to-purple-500/20">
-                  <Bot className="w-8 h-8 text-green-400" />
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-100 to-purple-100 rounded-2xl transform transition-transform group-hover:scale-105 duration-500"></div>
+            <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-cyan-100 h-full transform transition-all duration-500 group-hover:translate-y-[-4px]">
+              <div className="mb-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-purple-500 rounded-xl flex items-center justify-center transform rotate-12 group-hover:rotate-0 transition-transform duration-300">
+                  <Bot className="w-5 h-5 text-white transform -rotate-12 group-hover:rotate-0 transition-transform duration-300" />
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-100 mb-4">AI-Powered Automations</h3>
-              <p className="text-gray-300">Scale effortlessly with intelligent automation.</p>
-              <div className="mt-6 flex flex-wrap gap-2">
-                <span className="px-3 py-1 bg-green-500/20 rounded-full text-green-300 text-sm">Smart Workflows</span>
-                <span className="px-3 py-1 bg-purple-500/20 rounded-full text-purple-300 text-sm">Auto-Scaling</span>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Scale</h3>
+              <p className="text-sm text-gray-600 mb-3">Scale your product with AI automation and proven growth strategies.</p>
+              <div className="flex flex-wrap gap-1">
+                <span className="px-2 py-0.5 bg-cyan-100 text-cyan-700 rounded-full text-xs font-medium">AI Powered</span>
+                <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">Auto Scale</span>
               </div>
             </div>
           </div>
@@ -88,10 +96,13 @@ const BuildLaunchSlide = () => {
         <div className="text-center">
           <button 
             onClick={() => navigate('/register')}
-            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200 transform hover:scale-105 font-semibold text-lg group"
+            className="relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full hover:from-purple-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 font-semibold text-base group shadow-xl shadow-purple-500/20"
           >
             Start Building Now
             <ArrowRight className="ml-2 w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
+            
+            {/* Shine effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-45 opacity-0 group-hover:opacity-100 group-hover:animate-[shine_1s_ease] rounded-full"></div>
           </button>
         </div>
       </div>

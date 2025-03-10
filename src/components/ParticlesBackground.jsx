@@ -14,42 +14,7 @@ export function ParticlesBackground() {
       className="absolute inset-0 z-0"
       options={{
         fullScreen: { enable: false },
-        background: {
-          color: {
-            value: "transparent",
-          },
-        },
-        fpsLimit: 120,
-        interactivity: {
-          events: {
-            onClick: {
-              enable: true,
-              mode: "push",
-            },
-            onHover: {
-              enable: true,
-              mode: "grab",
-              parallax: {
-                enable: true,
-                force: 60,
-                smooth: 10
-              }
-            },
-            resize: true,
-          },
-          modes: {
-            push: {
-              quantity: 4,
-            },
-            grab: {
-              distance: 200,
-              links: {
-                opacity: 0.5,
-                color: "#a855f7"
-              }
-            }
-          },
-        },
+        fpsLimit: 60,
         particles: {
           color: {
             value: ["#c084fc", "#a855f7", "#7c3aed"],
@@ -76,7 +41,7 @@ export function ParticlesBackground() {
               enable: true,
               area: 800,
             },
-            value: 100,
+            value: 80,
           },
           opacity: {
             value: 0.7,
@@ -87,12 +52,47 @@ export function ParticlesBackground() {
           size: {
             value: { min: 1, max: 3 },
           },
-          zIndex: {
-            value: 1,
-            opacityRate: 1,
-          }
         },
         detectRetina: true,
+        interactivity: {
+          events: {
+            onClick: {
+              enable: true,
+              mode: "push",
+            },
+            onHover: {
+              enable: true,
+              mode: "grab",
+              parallax: {
+                enable: true,
+                force: 60,
+                smooth: 10
+              }
+            },
+            resize: {
+              enable: true,
+              delay: 0.5,
+              density: true
+            },
+          },
+          modes: {
+            push: {
+              quantity: 4,
+            },
+            grab: {
+              distance: 200,
+              links: {
+                opacity: 0.5,
+                color: "#a855f7"
+              }
+            }
+          },
+        },
+        background: {
+          color: {
+            value: "transparent",
+          },
+        }
       }}
     />
   );

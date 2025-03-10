@@ -11,6 +11,7 @@ export const StarfieldBackground = () => {
     <Particles
       id="starfield"
       init={particlesInit}
+      className="absolute inset-0 h-full w-full"
       options={{
         fullScreen: { enable: false },
         background: {
@@ -181,12 +182,6 @@ export const StarfieldBackground = () => {
           }
         ],
         detectRetina: true
-      }}
-      style={{
-        position: "absolute",
-        width: "100%",
-        height: "100%",
-        zIndex: 1
       }}
     />
   );

@@ -96,6 +96,30 @@
   }
 }
 
+/* Float animation for the Venn diagram */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Shine effect animation */
+@keyframes shine {
+  from {
+    transform: translateX(-100%) skewX(45deg);
+  }
+  to {
+    transform: translateX(150%) skewX(45deg);
+  }
+}
+
 .animate-blob {
   animation: blob 7s infinite;
 }
@@ -126,6 +150,7 @@ html {
   scroll-snap-stop: always;
   height: 100vh;
   position: relative;
+  overflow-y: auto;
 }
 
 /* Hide scrollbar but keep functionality */
@@ -136,4 +161,17 @@ html {
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari and Opera */
+}
+
+/* Add content container styles */
+.slide-content {
+  max-height: 100vh;
+  overflow-y: auto;
+  padding: 5rem 0;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.slide-content::-webkit-scrollbar {
+  display: none;
 }
