@@ -22,6 +22,11 @@ const ContactSlide = () => {
                 <p className="text-xl font-semibold text-white">+91 93445 66750</p>
               </div>
             </div>
+            <div className="mt-8">
+              <a href="https://nodevbuild.com" className="inline-block bg-white text-purple-600 font-semibold py-2 px-4 rounded-lg shadow hover:bg-gray-200">
+                Visit nodevbuild.com
+              </a>
+            </div>
           </div>
         </div>
       </div>
