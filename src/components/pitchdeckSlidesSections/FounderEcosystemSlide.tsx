@@ -5,7 +5,9 @@ import { Users, Rocket, Lightbulb, Handshake, TrendingUp } from 'lucide-react';
 const FounderEcosystemSlide = () => {
   return (
     <section className="snap-section flex items-center relative overflow-hidden bg-gradient-to-b from-[#0d1117] via-[#161b22] to-[#0d1117] h-screen">
-      <StarfieldBackground />
+      <div className="absolute inset-0">
+        <StarfieldBackground />
+      </div>
       
       <div className="w-full h-full flex flex-col">
         {/* Centered Heading and Label - Minimal top padding */}

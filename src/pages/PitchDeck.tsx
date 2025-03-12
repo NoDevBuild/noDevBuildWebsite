@@ -12,11 +12,12 @@ import UpskillSlide from '../components/pitchdeckSlidesSections/UpskillSlide';
 import MarketOpportunitySlide from '../components/pitchdeckSlidesSections/MarketOpportunitySlide';
 import FounderEcosystemSlide from '../components/pitchdeckSlidesSections/FounderEcosystemSlide';
 import ContactSlide from '../components/pitchdeckSlidesSections/ContactSlide';
+import AIAdoptionChallengeSlide from '../components/pitchdeckSlidesSections/AIAdoptionChallengeSlide';
 
 const PitchDeck = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const totalSlides = 9; // Updated to include new slide
+  const totalSlides = 10; // Updated to include new slide
 
   useEffect(() => {
     const container = containerRef.current;
@@ -100,6 +101,7 @@ const PitchDeck = () => {
         <UpskillSlide />
         <BuildLaunchSlide />
         <FounderEcosystemSlide />
+        <AIAdoptionChallengeSlide />
         <ProblemSolutionSlide />        
         <MarketOpportunitySlide />
         <ContactSlide />
