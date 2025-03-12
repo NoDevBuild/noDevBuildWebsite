@@ -120,6 +120,22 @@
   }
 }
 
+/* Subtle pulse animation for the Venn diagram */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.02);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
 .animate-blob {
   animation: blob 7s infinite;
 }

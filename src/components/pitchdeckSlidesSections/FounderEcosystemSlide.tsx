@@ -4,18 +4,18 @@ import { Users, Rocket, Lightbulb, Handshake, TrendingUp } from 'lucide-react';
 
 const FounderEcosystemSlide = () => {
   return (
-    <section className="snap-section flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-[#0d1117] via-[#161b22] to-[#0d1117] h-screen max-w-7xl mx-auto">
+    <section className="snap-section flex items-center relative overflow-hidden bg-gradient-to-b from-[#0d1117] via-[#161b22] to-[#0d1117] h-screen">
       <StarfieldBackground />
       
-      <div className="w-full relative px-4 sm:px-6 lg:px-8 flex flex-col h-full">
-        {/* Centered Heading and Label */}
-        <div className="flex flex-col items-center mb-0">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-full">
+      <div className="w-full h-full flex flex-col">
+        {/* Centered Heading and Label - Minimal top padding */}
+        <div className="flex flex-col items-center pt-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-full mb-3">
             <Users className="w-4 h-4 text-purple-400" />
             <span className="text-purple-400 text-xs font-medium">Founder Ecosystem</span>
           </div>
           
-          <h2 className="text-2xl xl:text-3xl font-bold text-white leading-tight text-center">
+          <h2 className="text-2xl sm:text-3xl xl:text-4xl font-bold text-white text-center leading-tight">
             Powering Founders with{' '}
             <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
               Investor-Backed Growth
@@ -23,15 +23,16 @@ const FounderEcosystemSlide = () => {
           </h2>
         </div>
 
-        {/* Remaining Content Container */}
-        <div className="flex flex-grow">
-          <div className="w-1/3">
-            <p className="text-base text-gray-300">
+        {/* Main Content Container - Takes remaining height */}
+        <div className="flex-1 flex items-stretch">
+          {/* Left Side Content */}
+          <div className="w-full md:w-1/4 px-4 md:pl-8 mb-8 md:mb-0 flex flex-col justify-center">
+            <p className="text-base text-gray-300 mb-6">
               Unlock Exclusive Access to Our Founder Ecosystem
             </p>
 
             <div className="bg-white/5 backdrop-blur-sm rounded-lg p-3 border border-white/10">
-              <div className="grid grid-cols-1 gap-1.5">
+              <div className="grid grid-cols-1 gap-2">
                 <div className="flex items-center gap-2 group">
                   <div className="w-6 h-6 rounded-md bg-purple-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                     <Users className="w-3 h-3 text-purple-400" />
@@ -70,14 +71,28 @@ const FounderEcosystemSlide = () => {
             </div>
           </div>
 
-          {/* Image Container */}
-          <div className="w-2/3 relative flex items-end justify-end h-full">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-full blur-3xl"></div>
-            <img 
-              src="/pitch-deck-images/investingRoadmap.png" 
-              alt="Investment Roadmap" 
-              className="w-full h-auto object-contain"
-            />
+          {/* Right Side Image - Full height container */}
+          <div className="hidden md:flex w-3/4 relative items-stretch">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div className="w-full h-full flex items-center justify-end">
+              <img 
+                src="/pitch-deck-images/investingRoadmap.png" 
+                alt="Investment Roadmap" 
+                className="w-full h-full object-contain relative z-10"
+              />
+            </div>
+          </div>
+
+          {/* Mobile Image Container */}
+          <div className="md:hidden w-full flex items-center">
+            <div className="relative w-full">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+              <img 
+                src="/pitch-deck-images/investingRoadmap.png" 
+                alt="Investment Roadmap" 
+                className="w-full h-full object-contain relative z-10"
+              />
+            </div>
           </div>
         </div>
       </div>
