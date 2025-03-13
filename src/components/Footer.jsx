@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { GraduationCap, Linkedin, Mail } from 'lucide-react';
+import { GraduationCap, Linkedin, Mail, Instagram } from 'lucide-react';
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
 import { Link, useNavigate } from 'react-router-dom';
@@ -148,7 +148,7 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4">
               <a 
-                href="https://www.linkedin.com" 
+                href="https://www.linkedin.com/company/nodevbuild" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="text-gray-400 hover:text-purple-400 transition-colors"
@@ -160,6 +160,14 @@ const Footer = () => {
                 className="text-gray-400 hover:text-purple-400 transition-colors"
               >
                 <Mail className="h-6 w-6" />
+              </a>
+              <a 
+                href="https://www.instagram.com/nodevbuild" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-gray-400 hover:text-purple-400 transition-colors"
+              >
+                <Instagram className="h-6 w-6" />
               </a>
             </div>
           </div>

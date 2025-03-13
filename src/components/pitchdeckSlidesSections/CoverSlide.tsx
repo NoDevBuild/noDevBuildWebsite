@@ -44,7 +44,7 @@ const CoverSlide: React.FC<CoverSlideProps> = ({ currentSlide }) => {
         <div className="flex flex-col items-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-8">
             <Rocket className="w-5 h-5 text-white" />
-            <span className="text-white text-sm font-medium">NoDev Build</span>
+            <span className="text-white text-sm font-medium">noDevBuild</span>
           </div>
           
           <h1 className="text-6xl md:text-8xl font-bold mb-6 text-white text-center">
