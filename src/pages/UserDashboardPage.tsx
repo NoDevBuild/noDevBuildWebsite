@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
+import { setUser } from '../store/authSlice';
 import { 
   Home, 
   BookOpen, 
@@ -21,15 +22,24 @@ import {
   Clock,
   CheckCircle,
   Edit,
-  ChevronDown
+  ChevronDown,
+  Save,
+  X,
+  FileText
 } from 'lucide-react';
-import { ParticlesBackground } from '../components/ParticlesBackground';
+import { authService } from '../services/authService';
+import { useToast } from '../contexts/ToastContext';
 
 const UserDashboardPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { showToast } = useToast();
   const { user } = useSelector((state: RootState) => state.auth);
   const [darkMode, setDarkMode] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [newDisplayName, setNewDisplayName] = useState(user?.displayName || '');
+  const [isUpdating, setIsUpdating] = useState(false);
   
   // Mock data - in a real app, this would come from the backend
   const membershipType = "Premium"; // "Normal", "Premium", "Lifetime"
@@ -49,13 +59,38 @@ const UserDashboardPage = () => {
     { id: 2, name: "AI Tools Masterclass", progress: 30, total: 10, completed: 3 },
   ];
 
+  const handleUpdateDisplayName = async () => {
+    if (!user?.uid || !newDisplayName.trim()) return;
+    
+    setIsUpdating(true);
+    try {
+      await authService.updateProfile(user.uid, { displayName: newDisplayName.trim() });
+      
+      // Update the user in Redux store
+      dispatch(setUser({
+        ...user,
+        displayName: newDisplayName.trim()
+      }));
+      
+      setIsEditingName(false);
+      showToast('Profile name updated successfully!', 'success');
+    } catch (error) {
+      showToast('Failed to update profile name. Please try again.', 'error');
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setNewDisplayName(user?.displayName || '');
+    setIsEditingName(false);
+  };
+
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
-    // In a real app, you would apply dark mode to the entire app
   };
 
   const handleLogout = () => {
-    // Implement logout logic
     navigate('/login');
   };
 
@@ -226,23 +261,6 @@ const UserDashboardPage = () => {
 
         {/* Dashboard Content */}
         <main className="p-6">
-          {/* Welcome Section */}
-          <div className={`mb-8 p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                <h2 className="text-2xl font-bold mb-2">Welcome back, {user?.displayName?.split(' ')[0] || "User"}!</h2>
-                <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  Here's an overview of your account and learning progress.
-                </p>
-              </div>
-              {membershipType !== "Lifetime" && (
-                <button className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200 transform hover:scale-105 shadow-md">
-                  Upgrade to Lifetime
-                </button>
-              )}
-            </div>
-          </div>
-
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {/* Membership Card */}
@@ -345,166 +363,36 @@ const UserDashboardPage = () => {
             </div>
           </div>
 
-          {/* Quick Access Section */}
-          <h2 className="text-xl font-bold mb-4">Quick Access</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {/* AI Tools Card */}
-            <Link 
-              to="/ai-tools"
-              className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-50'} shadow-sm transition-all duration-200 transform hover:scale-[1.02] hover:shadow-md border border-gray-200 dark:border-gray-700`}
-            >
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center mb-4">
-                  <Database className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-lg font-semibold mb-2">AI Tools</h3>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                  Explore the best AI tools for your projects
-                </p>
-              </div>
-            </Link>
-
-            {/* Startup Kit Card */}
-            <Link 
-              to="/dashboard/startup-kit"
-              className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-50'} shadow-sm transition-all duration-200 transform hover:scale-[1.02] hover:shadow-md border border-gray-200 dark:border-gray-700`}
-            >
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center mb-4">
-                  <Rocket className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-lg font-semibold mb-2">Startup Kit</h3>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                  Business-building tools & frameworks
-                </p>
-              </div>
-            </Link>
-
-            {/* Courses Card */}
-            <Link 
-              to="/dashboard/courses"
-              className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-50'} shadow-sm transition-all duration-200 transform hover:scale-[1.02] hover:shadow-md border border-gray-200 dark:border-gray-700`}
-            >
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center mb-4">
-                  <BookOpen className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-lg font-semibold mb-2">Courses & Projects</h3>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                  Track your learning progress
-                </p>
-              </div>
-            </Link>
-
-            {/* Founders Directory Card */}
-            <Link 
-              to="/investors"
-              className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-50'} shadow-sm transition-all duration-200 transform hover:scale-[1.02] hover:shadow-md border border-gray-200 dark:border-gray-700`}
-            >
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mb-4">
-                  <Users className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-lg font-semibold mb-2">Founders Directory</h3>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                  Connect with other founders
-                </p>
-              </div>
-            </Link>
-          </div>
-
-          {/* Two Column Layout for Course Progress and Membership */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {/* Course Progress */}
-            <div className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}>
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold">Course Progress</h2>
-                <Link 
-                  to="/dashboard/courses"
-                  className="text-sm text-blue-500 hover:text-blue-700 flex items-center"
-                >
-                  <span>View all</span>
-                  <ChevronRight className="h-4 w-4 ml-1" />
-                </Link>
-              </div>
-              
-              <div className="space-y-6">
-                {courseProgress.map(course => (
-                  <div key={course.id} className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <h3 className="font-medium">{course.name}</h3>
-                      <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                        {course.completed}/{course.total} lessons
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                      <div 
-                        className="bg-blue-600 h-2.5 rounded-full" 
-                        style={{ width: `${course.progress}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          {/* Course Progress Section */}
+          <div className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm mb-8`}>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold">Course Progress</h2>
+              <Link 
+                to="/dashboard/courses"
+                className="text-sm text-blue-500 hover:text-blue-700 flex items-center"
+              >
+                <span>View all</span>
+                <ChevronRight className="h-4 w-4 ml-1" />
+              </Link>
             </div>
-
-            {/* Membership & Billing */}
-            <div className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}>
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold">Membership & Billing</h2>
-                <Link 
-                  to="/dashboard/membership"
-                  className="text-sm text-blue-500 hover:text-blue-700 flex items-center"
-                >
-                  <span>Manage</span>
-                  <ChevronRight className="h-4 w-4 ml-1" />
-                </Link>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-50'} mb-6`}>
-                <div className="flex items-center gap-4">
-                  <div className="p-3 rounded-full bg-blue-500 bg-opacity-10">
-                    <CreditCard className="h-6 w-6 text-blue-500" />
+            
+            <div className="space-y-6">
+              {courseProgress.map(course => (
+                <div key={course.id} className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-medium">{course.name}</h3>
+                    <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                      {course.completed}/{course.total} lessons
+                    </span>
                   </div>
-                  <div>
-                    <h3 className="font-medium">{membershipType} Plan</h3>
-                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                      {membershipType === "Lifetime" 
-                        ? "Lifetime access to all content" 
-                        : `Renews on ${new Date(Date.now() + daysRemaining * 24 * 60 * 60 * 1000).toLocaleDateString()}`
-                      }
-                    </p>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                    <div 
+                      className="bg-blue-600 h-2.5 rounded-full" 
+                      style={{ width: `${course.progress}%` }}
+                    ></div>
                   </div>
                 </div>
-              </div>
-
-              <h3 className="font-medium mb-3">Recent Payments</h3>
-              <div className={`border ${darkMode ? 'border-gray-700' : 'border-gray-200'} rounded-lg overflow-hidden`}>
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                    <tr>
-                      <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                      <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Plan</th>
-                      <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
-                      <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className={`${darkMode ? 'bg-gray-800' : 'bg-white'} divide-y divide-gray-200 dark:divide-gray-700`}>
-                    {paymentHistory.map(payment => (
-                      <tr key={payment.id}>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm">{payment.date}</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm">{payment.plan}</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm">{payment.amount}</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm">
-                          <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                            {payment.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              ))}
             </div>
           </div>
 
@@ -534,6 +422,55 @@ const UserDashboardPage = () => {
                   </span>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Recent Activity Section */}
+          <div className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm mb-8`}>
+            <h2 className="text-xl font-bold mb-6">Recent Activity</h2>
+            
+            <div className="space-y-4">
+              {/* Payment Activity */}
+              <div className="flex items-start gap-4">
+                <div className="p-2 rounded-lg bg-blue-500/10">
+                  <CreditCard className="h-5 w-5 text-blue-500" />
+                </div>
+                <div>
+                  <p className="font-medium">Premium Membership Renewed</p>
+                  <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    Your membership has been renewed for another year
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">2 days ago</p>
+                </div>
+              </div>
+
+              {/* Course Progress Activity */}
+              <div className="flex items-start gap-4">
+                <div className="p-2 rounded-lg bg-green-500/10">
+                  <BookOpen className="h-5 w-5 text-green-500" />
+                </div>
+                <div>
+                  <p className="font-medium">Course Progress</p>
+                  <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    Completed Module 3 in "No-Code App Development"
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">5 days ago</p>
+                </div>
+              </div>
+
+              {/* Achievement Activity */}
+              <div className="flex items-start gap-4">
+                <div className="p-2 rounded-lg bg-amber-500/10">
+                  <Award className="h-5 w-5 text-amber-500" />
+                </div>
+                <div>
+                  <p className="font-medium">Achievement Unlocked</p>
+                  <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    Earned "Complete Profile" achievement
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">1 week ago</p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -567,7 +504,54 @@ const UserDashboardPage = () => {
                   <label className={`block text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'} mb-1`}>
                     Full Name
                   </label>
-                  <p className="font-medium">{user?.displayName || "User"}</p>
+                  {isEditingName ? (
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={newDisplayName}
+                        onChange={(e) => setNewDisplayName(e.target.value)}
+                        className={`flex-1 px-3 py-1.5 rounded-lg border ${
+                          darkMode 
+                            ? 'bg-gray-700 border-gray-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                        placeholder="Enter your name"
+                        disabled={isUpdating}
+                      />
+                      <button
+                        onClick={handleUpdateDisplayName}
+                        disabled={isUpdating || !newDisplayName.trim()}
+                        className={`p-1.5 rounded-lg ${
+                          isUpdating || !newDisplayName.trim()
+                            ? 'bg-gray-300 cursor-not-allowed'
+                            : 'bg-green-500 hover:bg-green-600'
+                        } text-white transition-colors`}
+                      >
+                        {isUpdating ? (
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                          <Save className="w-5 h-5" />
+                        )}
+                      </button>
+                      <button
+                        onClick={handleCancelEdit}
+                        disabled={isUpdating}
+                        className="p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{user?.displayName || "User"}</p>
+                      <button
+                        onClick={() => setIsEditingName(true)}
+                        className="p-1 text-blue-500 hover:text-blue-600 transition-colors"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
                 </div>
                 
                 <div>
@@ -594,6 +578,54 @@ const UserDashboardPage = () => {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Recent Payments Section */}
+          <div className={`mt-8 p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold">Recent Payments</h2>
+              <Link 
+                to="/dashboard/membership"
+                className="text-sm text-blue-500 hover:text-blue-700 flex items-center"
+              >
+                <span>View all</span>
+                <ChevronRight className="h-4 w-4 ml-1" />
+              </Link>
+            </div>
+            
+            <div className={`border ${darkMode ? 'border-gray-700' : 'border-gray-200'} rounded-lg overflow-hidden`}>
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                  <tr>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Plan</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Invoice</th>
+                  </tr>
+                </thead>
+                <tbody className={`${darkMode ? 'bg-gray-800' : 'bg-white'} divide-y divide-gray-200 dark:divide-gray-700`}>
+                  {paymentHistory.map(payment => (
+                    <tr key={payment.id}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">{payment.date}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">{payment.plan}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">{payment.amount}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                          {payment.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <button className="flex items-center text-blue-500 hover:text-blue-700">
+                          <FileText className="h-4 w-4 mr-1" />
+                          <span>Download</span>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </main>

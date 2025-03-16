@@ -14,6 +14,11 @@ interface AuthResponse {
   message?: string;
 }
 
+interface ProfileUpdate {
+  displayName?: string;
+  photoURL?: string;
+}
+
 export const authService = {
   async login(email: string, password: string): Promise<User> {
     try {
@@ -63,9 +68,14 @@ export const authService = {
     }
   },
 
-  async updateProfile(userId: string, data: { displayName?: string; photoURL?: string }): Promise<void> {
+  async updateProfile(userId: string, data: ProfileUpdate): Promise<void> {
     try {
-      await api.put(`/auth/users/${userId}`, data);
+      // Remove any undefined values from the update object
+      const cleanData: ProfileUpdate = {};
+      if (data.displayName !== undefined) cleanData.displayName = data.displayName;
+      if (data.photoURL !== undefined) cleanData.photoURL = data.photoURL;
+
+      await api.put(`/auth/users/${userId}`, cleanData);
     } catch (error: any) {
       const errorMessage = error.response?.data?.error || 'Profile update failed';
       throw new Error(errorMessage);
