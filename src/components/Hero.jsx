@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ParticlesBackground } from './ParticlesBackground';
 import { useTypewriter } from '../hooks/useTypewriter';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser } from '../store/authSlice';
 
 const Hero = () => {
   const typedText = useTypewriter(['Faster', 'Smarter', 'Cheaper'], 90, 2000);
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
 
-  const handleRegister = () => {
-    navigate('/register');
+  const handleButtonClick = () => {
+    if (!!user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/register');
+    }
   };
 
   return (
@@ -45,7 +52,7 @@ const Hero = () => {
           </p>
 
           <button
-            onClick={handleRegister}
+            onClick={handleButtonClick}
             className='inline-flex items-center justify-center w-full sm:w-auto px-8 sm:px-8 py-4 sm:py-4 bg-gradient-to-r from-purple-600 to-purple-700 
               text-white text-lg sm:text-lg font-semibold rounded-lg transform transition-all duration-200 ease-out 
               hover:scale-105 hover:shadow-lg hover:from-purple-500 hover:to-purple-600
@@ -54,9 +61,9 @@ const Hero = () => {
               touch-manipulation cursor-pointer select-none'
             type='button'
             role='button'
-            aria-label='Register Now'
+            aria-label={!!user ? 'Lessgoo!' : 'Register Now'}
           >
-            <span className='relative z-10'>Register Now</span>
+            <span className='relative z-10'>{!!user ? 'Lessgoo!' : 'Register Now'}</span>
             <div className='absolute inset-0 bg-gradient-to-r from-purple-500 to-purple-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left'></div>
           </button>
         </div>

@@ -46,13 +46,27 @@ export const paymentService = {
               signature: response.razorpay_signature,
               status: 'completed'
             });
-            window.location.href = '/dashboard';
+            
+            // Instead of redirecting with window.location, use the stored token
+            // and navigate programmatically to maintain the session
+            window.dispatchEvent(new CustomEvent('payment_success', {
+              detail: {
+                planType,
+                orderId
+              }
+            }));
           } catch (error) {
             console.error('Payment verification failed:', error);
             await api.put(`/payment/orders/${orderId}`, {
               paymentId: response.razorpay_payment_id,
               status: 'failed'
             });
+            
+            window.dispatchEvent(new CustomEvent('payment_error', {
+              detail: {
+                error: 'Payment verification failed'
+              }
+            }));
           }
         },
         prefill: {
@@ -68,6 +82,8 @@ export const paymentService = {
               paymentId: 'cancelled',
               status: 'failed'
             });
+            
+            window.dispatchEvent(new CustomEvent('payment_cancelled'));
           }
         }
       };

@@ -185,14 +185,12 @@ const Footer = () => {
                 </button>
               </li>
               <li>
-                <a 
-                  href="https://www.geniuls.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
+                <button 
+                  onClick={() => handleNavigate('/placements')}
                   className="text-gray-400 hover:text-purple-400 transition-colors"
                 >
-                  Genius for Placement
-                </a>
+                  Placements by noDevBuild
+                </button>
               </li>
               <li>
                 <button 

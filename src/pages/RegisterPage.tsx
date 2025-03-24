@@ -15,7 +15,35 @@ const RegisterPage: React.FC = () => {
   useEffect(() => {
     // Load Razorpay script when component mounts
     paymentService.loadRazorpay();
-  }, []);
+
+    // Handle payment success
+    const handlePaymentSuccess = (event: CustomEvent) => {
+      showToast('Payment successful! Welcome to NoDevBuild!', 'success');
+      navigate('/dashboard');
+    };
+
+    // Handle payment error
+    const handlePaymentError = (event: CustomEvent) => {
+      showToast(event.detail.error || 'Payment failed. Please try again.', 'error');
+    };
+
+    // Handle payment cancellation
+    const handlePaymentCancelled = () => {
+      showToast('Payment cancelled', 'info');
+    };
+
+    // Add event listeners
+    window.addEventListener('payment_success', handlePaymentSuccess as EventListener);
+    window.addEventListener('payment_error', handlePaymentError as EventListener);
+    window.addEventListener('payment_cancelled', handlePaymentCancelled);
+
+    // Cleanup event listeners
+    return () => {
+      window.removeEventListener('payment_success', handlePaymentSuccess as EventListener);
+      window.removeEventListener('payment_error', handlePaymentError as EventListener);
+      window.removeEventListener('payment_cancelled', handlePaymentCancelled);
+    };
+  }, [navigate, showToast]);
 
   const handlePlanSelect = async (plan: 'annual' | 'lifetime') => {
     if (!user) {
@@ -152,9 +180,9 @@ const RegisterPage: React.FC = () => {
       </div>
 
       {/* Testimonials Section */}
-      <div className="bg-gray-50">
+      {/* <div className="bg-gray-50">
         <Testimonials />
-      </div>
+      </div> */}
     </div>
   );
 };

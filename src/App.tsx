@@ -35,6 +35,7 @@ import InvestorsDirectoryPage from './pages/InvestorsDirectoryPage'
 import UserDashboardPage from './pages/UserDashboardPage'
 import UserMembershipPage from './pages/UserMembershipPage'
 import PitchDeck from './pages/PitchDeck'
+import PlacementsPage from './pages/PlacementsPage'
 
 function App() {
   const location = useLocation();
@@ -105,6 +106,7 @@ function App() {
         <Route path='/investors' element={<InvestorsDirectoryPage />} />
         <Route path='/dashboard' element={<UserDashboardPage />} />
         <Route path='/dashboard/membership' element={<UserMembershipPage />} />
+        <Route path='/placements' element={<PlacementsPage />} />
         <Route
           path='/'
           element={
@@ -115,8 +117,8 @@ function App() {
                 <WhyNoCode />
                 <Benefits />
                 <InvestorsSection />
-                <Instructors />
-                <Testimonials />
+                {/* <Instructors /> */}
+                {/* <Testimonials /> */}
               </div>
             </main>
           }
