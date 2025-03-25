@@ -118,7 +118,7 @@ const UserDashboardPage = () => {
             </Link>
           ) : (
             <div className="w-full flex justify-center">
-              <img src="/noDevBuild-logo.png" alt="Logo" className="h-10 w-10" />
+              <img src="/noDevBuildFavicon.png" alt="Logo" className="h-10 w-10 object-contain" />
             </div>
           )}
           <button 

@@ -144,8 +144,8 @@ const ContactUs = () => {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2">Email Us</h3>
-                  <a href="mailto:support@nodevbuild.com" className="text-gray-300 hover:text-purple-400 transition-colors">
-                    support@nodevbuild.com
+                  <a href="mailto:contact@nodevbuild.com" className="text-gray-300 hover:text-purple-400 transition-colors">
+                    contact@nodevbuild.com
                   </a>
                 </div>
               </div>
