@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, LogIn, User, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, LogIn, User, Eye, EyeOff, Check, X } from 'lucide-react';
 import AmongUsParticles from '../components/AmongUsParticles';
 import { useDispatch, useSelector } from 'react-redux';
 import { setError, setLoading, setUser } from '../store/authSlice';
 import { RootState } from '../store/store';
 import { authService } from '../services/authService';
+import { isStrongPassword } from '../utils/validation';
 
 const LoginPage: React.FC = () => {
   const [isSignup, setIsSignup] = useState(false);
@@ -15,9 +16,35 @@ const LoginPage: React.FC = () => {
   const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordRequirements, setPasswordRequirements] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    special: false
+  });
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { error, loading } = useSelector((state: RootState) => state.auth);
+
+  const checkPasswordRequirements = (pass: string) => {
+    setPasswordRequirements({
+      length: pass.length >= 8,
+      uppercase: /[A-Z]/.test(pass),
+      lowercase: /[a-z]/.test(pass),
+      number: /\d/.test(pass),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(pass)
+    });
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    
+    if (isSignup) {
+      checkPasswordRequirements(newPassword);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,8 +63,9 @@ const LoginPage: React.FC = () => {
           return;
         }
 
-        if (password.length < 6) {
-          dispatch(setError('Password must be at least 6 characters'));
+        const passwordValidation = isStrongPassword(password);
+        if (!passwordValidation.isValid) {
+          dispatch(setError(passwordValidation.message));
           return;
         }
 
@@ -152,24 +180,80 @@ const LoginPage: React.FC = () => {
                   <input
                     type={showPassword ? "text" : "password"}
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={handlePasswordChange}
                     className="w-full pl-10 pr-12 py-2 sm:py-2.5 bg-black/30 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent backdrop-blur-lg text-sm sm:text-base"
                     placeholder="••••••••"
                     required
                     disabled={loading}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300 focus:outline-none"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" />
-                    ) : (
-                      <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
-                    )}
-                  </button>
+                  {password && (
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300 focus:outline-none"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" />
+                      ) : (
+                        <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
+                      )}
+                    </button>
+                  )}
                 </div>
+                {isSignup && (
+                  <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5">
+                    <div className="flex items-center text-xs">
+                      {passwordRequirements.length ? (
+                        <Check className="h-3 w-3 text-green-400 mr-1 flex-shrink-0" />
+                      ) : (
+                        <X className="h-3 w-3 text-red-400 mr-1 flex-shrink-0" />
+                      )}
+                      <span className={`${passwordRequirements.length ? "text-green-400" : "text-gray-400"} tracking-wide`}>
+                        At least 8 characters long
+                      </span>
+                    </div>
+                    <div className="flex items-center text-xs">
+                      {passwordRequirements.uppercase ? (
+                        <Check className="h-3 w-3 text-green-400 mr-1 flex-shrink-0" />
+                      ) : (
+                        <X className="h-3 w-3 text-red-400 mr-1 flex-shrink-0" />
+                      )}
+                      <span className={`${passwordRequirements.uppercase ? "text-green-400" : "text-gray-400"} tracking-wide`}>
+                        At least one uppercase letter
+                      </span>
+                    </div>
+                    <div className="flex items-center text-xs">
+                      {passwordRequirements.lowercase ? (
+                        <Check className="h-3 w-3 text-green-400 mr-1 flex-shrink-0" />
+                      ) : (
+                        <X className="h-3 w-3 text-red-400 mr-1 flex-shrink-0" />
+                      )}
+                      <span className={`${passwordRequirements.lowercase ? "text-green-400" : "text-gray-400"} tracking-wide`}>
+                        At least one lowercase letter
+                      </span>
+                    </div>
+                    <div className="flex items-center text-xs">
+                      {passwordRequirements.number ? (
+                        <Check className="h-3 w-3 text-green-400 mr-1 flex-shrink-0" />
+                      ) : (
+                        <X className="h-3 w-3 text-red-400 mr-1 flex-shrink-0" />
+                      )}
+                      <span className={`${passwordRequirements.number ? "text-green-400" : "text-gray-400"} tracking-wide`}>
+                        At least one number
+                      </span>
+                    </div>
+                    <div className="flex items-center text-xs">
+                      {passwordRequirements.special ? (
+                        <Check className="h-3 w-3 text-green-400 mr-1 flex-shrink-0" />
+                      ) : (
+                        <X className="h-3 w-3 text-red-400 mr-1 flex-shrink-0" />
+                      )}
+                      <span className={`${passwordRequirements.special ? "text-green-400" : "text-gray-400"} tracking-wide`}>
+                        At least one special character
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {isSignup && (
@@ -188,17 +272,19 @@ const LoginPage: React.FC = () => {
                       required={isSignup}
                       disabled={loading}
                     />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300 focus:outline-none"
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" />
-                      ) : (
-                        <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
-                      )}
-                    </button>
+                    {confirmPassword && (
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300 focus:outline-none"
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" />
+                        ) : (
+                          <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
+                        )}
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
