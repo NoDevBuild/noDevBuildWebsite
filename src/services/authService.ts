@@ -55,7 +55,8 @@ export const authService = {
       
       return response.data.user;
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error || 'Registration failed';
+      console.log(error);
+      const errorMessage = error.response?.data?.error || error?.message || 'Registration failed';
       throw new Error(errorMessage);
     }
   },
