@@ -1,0 +1,1 @@
+export type MembershipType = "Normal" | "Premium" | "Lifetime"; 

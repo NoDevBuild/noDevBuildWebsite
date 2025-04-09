@@ -139,7 +139,7 @@ const UserMembershipPage = () => {
                   className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-colors"
                 >
                   <Home className="h-5 w-5" />
-                  {sidebarOpen && <span>Dashboard</span>}
+                  {sidebarOpen && <span>Home</span>}
                 </Link>
               </li>
               <li>

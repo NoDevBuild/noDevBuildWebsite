@@ -106,6 +106,8 @@ function App() {
         <Route path='/investors' element={<InvestorsDirectoryPage />} />
         <Route path='/dashboard' element={<UserDashboardPage />} />
         <Route path='/dashboard/membership' element={<UserMembershipPage />} />
+        <Route path='/dashboard/my-courses' element={<UserDashboardPage />} />
+        <Route path='/dashboard/my-courses/:courseSlug' element={<UserDashboardPage />} />
         <Route path='/placements' element={<PlacementsPage />} />
         <Route
           path='/'
