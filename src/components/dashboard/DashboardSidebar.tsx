@@ -4,14 +4,15 @@ import {
   Home, 
   BookOpen, 
   User, 
-  Settings, 
   LogOut, 
-  Star, 
   Database, 
   Users, 
-  Rocket,
-  ChevronRight
+  ChevronRight,
+  HelpCircle
 } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import Avatar from '../common/Avatar';
 
 interface DashboardSidebarProps {
   sidebarOpen: boolean;
@@ -29,6 +30,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
   setActiveSection
 }) => {
   const location = useLocation();
+  const user = useSelector((state: RootState) => state.auth.user);
   
   // Update active section based on current path
   React.useEffect(() => {
@@ -81,18 +83,6 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             </li>
             <li>
               <Link 
-                to="/dashboard/membership"
-                onClick={() => handleNavClick('membership')}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg w-full ${
-                  activeSection === 'membership' ? 'bg-white/10 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'
-                } transition-colors`}
-              >
-                <Star className="h-5 w-5" />
-                {sidebarOpen && <span>My Membership</span>}
-              </Link>
-            </li>
-            <li>
-              <Link 
                 to="/dashboard/my-courses"
                 onClick={() => handleNavClick('my-courses')}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg w-full ${
@@ -103,19 +93,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                 {sidebarOpen && <span>My Courses</span>}
               </Link>
             </li>
-            <li>
-              <Link 
-                to="/dashboard/startup-kit"
-                onClick={() => handleNavClick('startup-kit')}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg w-full ${
-                  activeSection === 'startup-kit' ? 'bg-white/10 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'
-                } transition-colors`}
-              >
-                <Rocket className="h-5 w-5" />
-                {sidebarOpen && <span>Startup Kit</span>}
-              </Link>
-            </li>
-            <li>
+            {/* <li>
               <Link 
                 to="/investors" 
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg ${
@@ -125,8 +103,8 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                 <Users className="h-5 w-5" />
                 {sidebarOpen && <span>Founders Directory</span>}
               </Link>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
               <Link 
                 to="/ai-tools" 
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg ${
@@ -136,43 +114,60 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                 <Database className="h-5 w-5" />
                 {sidebarOpen && <span>AI Tools</span>}
               </Link>
-            </li>
-            <li>
-              <Link 
-                to="/dashboard/profile"
-                onClick={() => handleNavClick('profile')}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg w-full ${
-                  activeSection === 'profile' ? 'bg-white/10 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'
-                } transition-colors`}
-              >
-                <User className="h-5 w-5" />
-                {sidebarOpen && <span>Profile</span>}
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/dashboard/settings"
-                onClick={() => handleNavClick('settings')}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg w-full ${
-                  activeSection === 'settings' ? 'bg-white/10 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'
-                } transition-colors`}
-              >
-                <Settings className="h-5 w-5" />
-                {sidebarOpen && <span>Settings</span>}
-              </Link>
-            </li>
+            </li> */}
           </ul>
         </nav>
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 p-4">
-        <button 
-          onClick={handleLogout}
-          className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-colors"
-        >
-          <LogOut className="h-5 w-5" />
-          {sidebarOpen && <span>Logout</span>}
-        </button>
+        <div className="space-y-2">
+          <Link 
+            to="/dashboard/profile"
+            onClick={() => handleNavClick('profile')}
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg w-full ${
+              activeSection === 'profile' ? 'bg-white/10 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'
+            } transition-colors`}
+          >
+            <User className="h-5 w-5" />
+            {sidebarOpen && <span>Profile</span>}
+          </Link>
+
+          <Link 
+            to="/support"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+          >
+            <HelpCircle className="h-5 w-5" />
+            {sidebarOpen && <span>Support</span>}
+          </Link>
+
+          <button 
+            onClick={handleLogout}
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+          >
+            <LogOut className="h-5 w-5" />
+            {sidebarOpen && <span>Logout</span>}
+          </button>
+
+          <div className="border-t border-white/20 my-4"></div>
+
+          <Link 
+            to="/dashboard/profile"
+            onClick={() => handleNavClick('profile')}
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+          >
+            <Avatar 
+              name={user?.displayName || "User"}
+              size="sm"
+              className="border-2 border-white"
+            />
+            {sidebarOpen && (
+              <div>
+                <p className="text-white font-medium">{user?.displayName || "User"}</p>
+                <p className="text-white/60 text-sm">{user?.email}</p>
+              </div>
+            )}
+          </Link>
+        </div>
       </div>
     </div>
   );

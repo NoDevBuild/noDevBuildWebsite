@@ -6,6 +6,8 @@ import DashboardHeader from './DashboardHeader';
 import DashboardCourses from './DashboardCourses';
 import DashboardCourseDetail from './DashboardCourseDetail';
 import HomeContent from './HomeContent';
+import ProfilePage from './ProfilePage';
+import Avatar from '../common/Avatar';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -55,6 +57,8 @@ const Dashboard = () => {
     switch(activeSection) {
       case 'dashboard':
         return <HomeContent />;
+      case 'profile':
+        return <ProfilePage />;
       case 'membership':
         return (
           <div className="p-6">
@@ -102,7 +106,7 @@ const Dashboard = () => {
             <DashboardCourses />
           </div>
         );
-      case 'startup-kit':
+      
         return (
           <div className="p-6">
             <h2 className="text-2xl font-bold mb-6">Startup Kit</h2>
@@ -140,10 +144,10 @@ const Dashboard = () => {
             <h2 className="text-2xl font-bold mb-6">My Profile</h2>
             <div className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}>
               <div className="flex items-center mb-6">
-                <img 
-                  src={user?.photoURL || "https://ui-avatars.com/api/?name=User"} 
-                  alt="Profile" 
-                  className="w-20 h-20 rounded-full mr-4"
+                <Avatar 
+                  name={user?.displayName || "User"} 
+                  size="lg"
+                  className="mr-4"
                 />
                 <div>
                   <h3 className="text-xl font-bold">{user?.displayName || "User"}</h3>
@@ -204,7 +208,7 @@ const Dashboard = () => {
             </div>
           </div>
         );
-      case 'settings':
+        
         return (
           <div className="p-6">
             <h2 className="text-2xl font-bold mb-6">Settings</h2>

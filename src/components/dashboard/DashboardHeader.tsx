@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bell, Moon, Sun } from 'lucide-react';
 import { User } from '../types/user';
+import Avatar from '../common/Avatar';
 
 interface DashboardHeaderProps {
   darkMode: boolean;
@@ -35,10 +36,10 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           </button>
           <div className="flex items-center gap-2">
             <div className="relative">
-              <img 
-                src={user?.photoURL || "https://ui-avatars.com/api/?name=User"}
-                alt="Profile" 
-                className="h-10 w-10 rounded-full object-cover border-2 border-blue-500"
+              <Avatar 
+                name={user?.displayName || "User"}
+                size="sm"
+                className="border-2 border-blue-500"
               />
               <div className="absolute -bottom-1 -right-1">
                 <div className={`${getBadgeColor()} text-[10px] px-2 py-0.5 rounded-full text-white font-medium`}>
