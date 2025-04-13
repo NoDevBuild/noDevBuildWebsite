@@ -1,12 +1,7 @@
 import api from './api';
-
-export interface User {
-  uid: string;
-  email: string | null;
-  displayName: string | null;
-  photoURL: string | null;
-  emailVerified: boolean;
-}
+import { User } from '../types/user';
+import { setUser } from '../actions/userActions';
+import { store } from '../store';
 
 interface AuthResponse {
   token: string;
@@ -20,7 +15,7 @@ interface ProfileUpdate {
 }
 
 export const authService = {
-  async login(email: string, password: string): Promise<User> {
+  async login(email: string, password: string): Promise<{ user: User; membershipStatus: string }> {
     try {
       const response = await api.post<AuthResponse>('/auth/login', { 
         email, 
@@ -30,7 +25,20 @@ export const authService = {
       // Store the token
       localStorage.setItem('token', response.data.token);
       
-      return response.data.user;
+      // Get user profile to check membership status
+      const userProfile = await this.getProfile(response.data.user.uid);
+      
+      // Update Redux store with the user data including membership status
+      const userWithMembership = {
+        ...response.data.user,
+        membershipStatus: userProfile.membershipStatus || 'inactive'
+      };
+      store.dispatch(setUser(userWithMembership));
+      
+      return {
+        user: userWithMembership,
+        membershipStatus: userProfile.membershipStatus || 'inactive'
+      };
     } catch (error: any) {
       const errorMessage = error.response?.data?.error || 'Login failed';
       throw new Error(errorMessage);
@@ -63,8 +71,12 @@ export const authService = {
 
   async logout(): Promise<void> {
     try {
+      // Remove token from localStorage
       localStorage.removeItem('token');
+      // Clear user state in Redux
+      store.dispatch(setUser(null));
     } catch (error: any) {
+      console.error('Error during logout:', error);
       throw new Error('Logout failed');
     }
   },

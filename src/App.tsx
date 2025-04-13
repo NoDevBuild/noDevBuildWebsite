@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser, setInitialized } from './store/authSlice';
 import { setLoading, setCourses, setError } from './store/coursesSlice';
 import { RootState } from './store/store';
 import { scrollToTop } from './utils/helpers';
 import { courseService } from './services/courseService';
+import { authService } from './services/authService';
+import api from './services/api';
 
 // Components
 import Header from './components/Header'
@@ -39,9 +41,10 @@ import PlacementsPage from './pages/PlacementsPage'
 
 function App() {
   const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { initialized } = useSelector((state: RootState) => state.auth);
-  const isAuthPage = ['/login'].includes(location.pathname);
+  const { initialized, user } = useSelector((state: RootState) => state.auth);
+  const isLoginPage = location.pathname === '/login';
   const isDashboardPage = location.pathname.startsWith('/dashboard');
   const isPitchDeckPage = location.pathname === '/pitch-deck';
 
@@ -52,15 +55,47 @@ function App() {
 
   // Initialize auth state from token
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      // Here you would typically validate the token with your backend
-      // For now, we'll just set initialized to true
+    const initializeAuth = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          // Get the user ID from the token
+          const response = await api.get('/auth/verify-token');
+          if (response.data.uid) {
+            // Fetch the user profile
+            const userProfile = await authService.getProfile(response.data.uid);
+            dispatch(setUser(userProfile));
+
+            // Handle redirection based on membership status
+            if (isLoginPage && userProfile.membershipStatus === 'active') {
+              navigate('/dashboard');
+              return;
+            }
+
+            // If user is on dashboard but doesn't have active membership, redirect to register
+            if (isDashboardPage && userProfile.membershipStatus !== 'active') {
+              navigate('/register');
+              return;
+            }
+          }
+        } catch (error) {
+          console.error('Error initializing auth:', error);
+          localStorage.removeItem('token');
+          if (isDashboardPage) {
+            navigate('/login');
+          }
+        }
+      } else {
+        // If no token and trying to access dashboard, redirect to login
+        if (isDashboardPage) {
+          navigate('/login');
+        }
+      }
       dispatch(setInitialized(true));
-    } else {
-      dispatch(setInitialized(true));
-    }
-  }, [dispatch]);
+    };
+
+    initializeAuth();
+  }, [dispatch, isLoginPage, isDashboardPage, navigate]);
 
   // Fetch courses
   useEffect(() => {
@@ -88,7 +123,7 @@ function App() {
 
   return (
     <div className='min-h-screen bg-[#0d1117]'>
-      {!isAuthPage && !isDashboardPage && !isPitchDeckPage && <Header />}
+      {!isLoginPage && !isDashboardPage && !isPitchDeckPage && <Header />}
       <Routes>
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
@@ -128,7 +163,7 @@ function App() {
         />
         <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
-      {!isAuthPage && !isDashboardPage && !isPitchDeckPage && <Footer />}
+      {!isLoginPage && !isDashboardPage && !isPitchDeckPage && <Footer />}
     </div>
   );
 }

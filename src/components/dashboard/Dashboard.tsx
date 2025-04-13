@@ -8,10 +8,15 @@ import DashboardCourseDetail from './DashboardCourseDetail';
 import HomeContent from './HomeContent';
 import ProfilePage from './ProfilePage';
 import Avatar from '../common/Avatar';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../store/authSlice';
+import { authService } from '../../services/authService';
+import { User } from '../../services/authService';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const {
     darkMode,
     sidebarOpen,
@@ -42,8 +47,14 @@ const Dashboard = () => {
     }
   }, [location, setActiveSection]);
 
-  const handleLogout = () => {
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      dispatch(setUser(null));
+      navigate('/login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   // Render different content based on active section

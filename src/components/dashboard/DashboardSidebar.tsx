@@ -13,11 +13,11 @@ import {
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import Avatar from '../common/Avatar';
+import { authService } from '../../services/authService';
 
 interface DashboardSidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
-  handleLogout: () => void;
   activeSection: string;
   setActiveSection: (section: string) => void;
 }
@@ -25,11 +25,11 @@ interface DashboardSidebarProps {
 const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ 
   sidebarOpen, 
   setSidebarOpen, 
-  handleLogout,
   activeSection,
   setActiveSection
 }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
   
   // Update active section based on current path
@@ -43,6 +43,15 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 
   const handleNavClick = (section: string) => {
     setActiveSection(section);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   return (

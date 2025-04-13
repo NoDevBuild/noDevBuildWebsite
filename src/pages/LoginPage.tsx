@@ -73,9 +73,14 @@ const LoginPage: React.FC = () => {
         dispatch(setUser(user));
         navigate('/');
       } else {
-        const user = await authService.login(email, password);
-        dispatch(setUser(user));
-        navigate('/');
+        const { membershipStatus } = await authService.login(email, password);
+        
+        // Redirect based on membership status
+        if (membershipStatus === 'active') {
+          navigate('/dashboard');
+        } else {
+          navigate('/register');
+        }
       }
     } catch (error: any) {
       dispatch(setError(error.message));
