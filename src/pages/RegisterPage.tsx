@@ -65,9 +65,9 @@ const RegisterPage: React.FC = () => {
       <div className="pt-24 sm:pt-32 pb-12 sm:pb-16">
         <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12">
-            <h1 className="text-2xl sm:text-3xl md:text-[3.5rem] font-bold text-[#1e293b] leading-[1.15] mb-4 sm:mb-6">
-              One Membership,<br />
-              <span className="italic font-serif">Unlimited Access</span>
+            <h1 className="flex flex-col gap-7 text-2xl sm:text-3xl md:text-[3.5rem] font-bold text-[#1e293b] mb-4 sm:mb-6">
+              <span className="block">One Membership,</span>
+              <span className="block italic font-serif">Unlimited Access</span>
             </h1>
             
             <div className="flex items-center justify-center gap-1 sm:gap-2 text-base sm:text-lg text-[#475569]">
