@@ -116,7 +116,28 @@ function App() {
   if (!initialized) {
     return (
       <div className="min-h-screen bg-[#0d1117] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent"></div>
+        <div className="relative w-32 h-32">
+          {/* 3D Cube */}
+          <div className="absolute w-full h-full transform-style-3d animate-spin-slow">
+            {/* Front face */}
+            <div className="absolute w-full h-full bg-purple-600/20 transform translate-z-16 border border-purple-500/30"></div>
+            {/* Back face */}
+            <div className="absolute w-full h-full bg-purple-600/20 transform -translate-z-16 border border-purple-500/30"></div>
+            {/* Right face */}
+            <div className="absolute w-full h-full bg-purple-600/20 transform rotate-y-90 translate-z-16 border border-purple-500/30"></div>
+            {/* Left face */}
+            <div className="absolute w-full h-full bg-purple-600/20 transform -rotate-y-90 translate-z-16 border border-purple-500/30"></div>
+            {/* Top face */}
+            <div className="absolute w-full h-full bg-purple-600/20 transform rotate-x-90 translate-z-16 border border-purple-500/30"></div>
+            {/* Bottom face */}
+            <div className="absolute w-full h-full bg-purple-600/20 transform -rotate-x-90 translate-z-16 border border-purple-500/30"></div>
+          </div>
+          
+          {/* Loading text */}
+          <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-white/80 text-sm">
+            Loading...
+          </div>
+        </div>
       </div>
     );
   }

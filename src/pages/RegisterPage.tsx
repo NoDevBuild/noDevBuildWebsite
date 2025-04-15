@@ -1,16 +1,27 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import { Newspaper, Rocket, Users, Wrench, BookOpen } from 'lucide-react';
-import Testimonials from '../components/Testimonials';
+import { Newspaper, Rocket, Users, Wrench, BookOpen, Tag, X, Check } from 'lucide-react';
 import { paymentService } from '../services/paymentService';
+import { referralService } from '../services/referralService';
 import { useToast } from '../contexts/ToastContext';
+
+interface PlanDetails {
+  type: 'basicPlan' | 'premiumPlan';
+  originalPrice: number;
+  discountedPrice?: number;
+}
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth?.user);
   const { showToast } = useToast();
+  const [selectedPlan, setSelectedPlan] = useState<PlanDetails | null>(null);
+  const [referralCode, setReferralCode] = useState('');
+  const [isValidatingCode, setIsValidatingCode] = useState(false);
+  const [discountPercent, setDiscountPercent] = useState(0);
+  const [codeError, setCodeError] = useState('');
 
   useEffect(() => {
     // Load Razorpay script when component mounts
@@ -45,20 +56,165 @@ const RegisterPage: React.FC = () => {
     };
   }, [navigate, showToast]);
 
-  const handlePlanSelect = async (plan: 'annual' | 'lifetime') => {
+  const handlePlanSelect = (type: 'basicPlan' | 'premiumPlan') => {
+    const price = type === 'basicPlan' ? 1800 : 5000;
+    setSelectedPlan({
+      type,
+      originalPrice: price,
+      discountedPrice: discountPercent ? price - (price * discountPercent / 100) : undefined
+    });
+  };
+
+  const handleVerifyCode = async () => {
+    if (!referralCode.trim()) {
+      setCodeError('Please enter a referral code');
+      return;
+    }
+
+    setIsValidatingCode(true);
+    setCodeError('');
+
+    try {
+      const response = await referralService.verifyCode(referralCode.trim());
+      if (response.isValid) {
+        setDiscountPercent(response.discountPercent);
+        if (selectedPlan) {
+          const discountedPrice = selectedPlan.originalPrice - (selectedPlan.originalPrice * response.discountPercent / 100);
+          setSelectedPlan({
+            ...selectedPlan,
+            discountedPrice
+          });
+        }
+        showToast(`Referral code applied! ${response.discountPercent}% discount`, 'success');
+      } else {
+        setCodeError('Invalid referral code');
+      }
+    } catch (error: any) {
+      setCodeError(error.message);
+    } finally {
+      setIsValidatingCode(false);
+    }
+  };
+
+  const handlePayment = async () => {
+    if (!selectedPlan) return;
     if (!user) {
-      localStorage.setItem('selectedPlan', plan);
+      localStorage.setItem('selectedPlan', selectedPlan.type);
       navigate('/login');
       return;
     }
 
     try {
-      await paymentService.initiatePayment(plan, user);
+      await paymentService.initiatePayment(selectedPlan.type, user);
     } catch (error: any) {
       console.error('Payment initiation failed:', error);
       showToast(error.message || 'Failed to initiate payment. Please try again.', 'error');
     }
   };
+
+  if (selectedPlan) {
+    return (
+      <div className="min-h-screen w-full bg-[#f8fafc] py-20">
+        <div className="max-w-2xl mx-auto px-4">
+          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-2xl font-bold">Checkout</h2>
+              <button 
+                onClick={() => setSelectedPlan(null)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Selected Plan Details */}
+            <div className="mb-8">
+              <div className="bg-gray-50 rounded-xl p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold">
+                    {selectedPlan.type === 'basicPlan' ? 'Basic Plan' : 'Premium Plan'}
+                  </h3>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold">
+                      {selectedPlan.discountedPrice ? (
+                        <>
+                          <span className="text-gray-400 line-through text-lg mr-2">
+                            ₹{selectedPlan.originalPrice}
+                          </span>
+                          ₹{selectedPlan.discountedPrice}
+                        </>
+                      ) : (
+                        `₹${selectedPlan.originalPrice}`
+                      )}
+                    </div>
+                    {selectedPlan.type === 'basicPlan' && (
+                      <span className="text-sm text-gray-500">per year</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Plan Features */}
+                <div className="space-y-2">
+                  {['Access to all courses', 'Community support', 'AI tools directory'].map((feature, index) => (
+                    <div key={index} className="flex items-center text-gray-600">
+                      <Check className="w-5 h-5 text-green-500 mr-2" />
+                      <span>{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Referral Code Section */}
+            <div className="mb-8">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Have a referral code?
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={referralCode}
+                  onChange={(e) => setReferralCode(e.target.value)}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  placeholder="Enter code"
+                />
+                <button
+                  onClick={handleVerifyCode}
+                  disabled={isValidatingCode}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50"
+                >
+                  {isValidatingCode ? 'Verifying...' : 'Apply'}
+                </button>
+              </div>
+              {codeError && (
+                <p className="mt-2 text-sm text-red-600">{codeError}</p>
+              )}
+              {discountPercent > 0 && (
+                <p className="mt-2 text-sm text-green-600">
+                  {discountPercent}% discount applied!
+                </p>
+              )}
+            </div>
+
+            {/* Payment Button */}
+            <button
+              onClick={handlePayment}
+              className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200 font-semibold text-lg"
+            >
+              Pay Now
+            </button>
+
+            <p className="mt-4 text-sm text-gray-500 text-center">
+              By proceeding, you agree to our{' '}
+              <Link to="/terms" className="text-purple-600 hover:text-purple-700">
+                Terms of Service
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full bg-[#f8fafc]">
@@ -80,14 +236,14 @@ const RegisterPage: React.FC = () => {
           </div>
 
           <div className="grid sm:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto mb-8 sm:mb-12">
-            {/* Annual Plan */}
+            {/* Basic Plan */}
             <div className="relative bg-white rounded-2xl shadow-xl p-6 sm:p-8 border-2 border-[#1e293b]">
               <div className="absolute -top-3 right-6 sm:right-8 bg-[#fbbf24] text-white px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-bold">
                 20% off
               </div>
               
               <div className="mb-6 sm:mb-8">
-                <h3 className="text-xl sm:text-2xl font-bold text-[#1e293b] mb-3 sm:mb-4">Annual</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-[#1e293b] mb-3 sm:mb-4">Basic Plan</h3>
                 <div className="flex items-baseline gap-2">
                   <span className="text-gray-400 line-through text-xl sm:text-2xl">₹2,000</span>
                   <span className="text-3xl sm:text-4xl font-bold text-[#1e293b]">₹1,800</span>
@@ -96,17 +252,17 @@ const RegisterPage: React.FC = () => {
               </div>
 
               <button
-                onClick={() => handlePlanSelect('annual')}
+                onClick={() => handlePlanSelect('basicPlan')}
                 className="w-full bg-[#1e293b] text-white rounded-lg py-3 sm:py-4 font-semibold hover:bg-[#334155] transition-colors text-base sm:text-lg"
               >
                 {user ? 'Proceed to Checkout' : 'Select Plan'}
               </button>
             </div>
 
-            {/* Lifetime Plan */}
+            {/* Premium Plan */}
             <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
               <div className="mb-6 sm:mb-8">
-                <h3 className="text-xl sm:text-2xl font-bold text-[#1e293b] mb-3 sm:mb-4">Lifetime</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-[#1e293b] mb-3 sm:mb-4">Premium Plan</h3>
                 <div className="flex items-baseline">
                   <span className="text-gray-400 line-through text-xl sm:text-2xl">₹6,000</span>
                   <span className="text-3xl sm:text-4xl font-bold text-[#1e293b]">₹5,000</span>
@@ -114,7 +270,7 @@ const RegisterPage: React.FC = () => {
               </div>
 
               <button
-                onClick={() => handlePlanSelect('lifetime')}
+                onClick={() => handlePlanSelect('premiumPlan')}
                 className="w-full bg-white text-[#1e293b] border-2 border-[#1e293b] rounded-lg py-3 sm:py-4 font-semibold hover:bg-gray-50 transition-colors text-base sm:text-lg"
               >
                 {user ? 'Proceed to Checkout' : 'Select Plan'}
@@ -178,11 +334,6 @@ const RegisterPage: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Testimonials Section */}
-      {/* <div className="bg-gray-50">
-        <Testimonials />
-      </div> */}
     </div>
   );
 };

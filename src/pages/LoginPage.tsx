@@ -49,30 +49,32 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(setLoading(true));
-    dispatch(setError(null));
-    
+
     try {
       if (isSignup) {
         if (!fullName.trim()) {
-          dispatch(setError('Please enter your full name'));
-          return;
+          throw new Error('Please enter your full name');
         }
 
         if (password !== confirmPassword) {
-          dispatch(setError('Passwords do not match'));
-          return;
+          throw new Error('Passwords do not match');
         }
 
         const passwordValidation = isStrongPassword(password);
         if (!passwordValidation.isValid) {
-          dispatch(setError(passwordValidation.message));
-          return;
+          throw new Error(passwordValidation.message);
         }
 
+        // Add a delay to show loading animation
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
         const user = await authService.register(email, password, fullName);
         dispatch(setUser(user));
         navigate('/');
       } else {
+        // Add a delay to show loading animation
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
         const { membershipStatus } = await authService.login(email, password);
         
         // Redirect based on membership status
@@ -84,8 +86,6 @@ const LoginPage: React.FC = () => {
       }
     } catch (error: any) {
       dispatch(setError(error.message));
-    } finally {
-      dispatch(setLoading(false));
     }
   };
 
@@ -110,10 +110,28 @@ const LoginPage: React.FC = () => {
       dispatch(setError('Password reset link has been sent to your email'));
     } catch (error: any) {
       dispatch(setError(error.message));
-    } finally {
-      dispatch(setLoading(false));
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen w-full relative flex items-center justify-center bg-black overflow-hidden">
+        <AmongUsParticles />
+        <div className="relative">
+          {/* Using Rocket animation GIF - 4x larger */}
+          <img 
+            src="/Rocket_animation.gif" 
+            alt="Loading..." 
+            className="w-50 h-50 object-contain" // 4x larger than previous 32
+          />
+          {/* Loading text */}
+          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-white/80 text-sm">
+            {isSignup ? 'Creating your account...' : 'Signing in...'}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full relative flex items-center justify-center bg-black overflow-hidden px-4 py-8 md:px-0 md:py-0">

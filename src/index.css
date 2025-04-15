@@ -191,3 +191,8 @@ html {
 .slide-content::-webkit-scrollbar {
   display: none;
 }
+
+/* Add 3D transform styles */
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
