@@ -75,17 +75,27 @@ const LoginPage: React.FC = () => {
         // Add a delay to show loading animation
         await new Promise(resolve => setTimeout(resolve, 2000));
         
-        const { membershipStatus } = await authService.login(email, password);
+        const { user, membershipStatus } = await authService.login(email, password);
+        dispatch(setUser({ ...user, membershipStatus }));
         
-        // Redirect based on membership status
+        // If user has active membership, redirect to dashboard
         if (membershipStatus === 'active') {
           navigate('/dashboard');
         } else {
-          navigate('/register');
+          // Check for redirect path after login
+          const redirectPath = localStorage.getItem('redirectAfterLogin');
+          if (redirectPath) {
+            localStorage.removeItem('redirectAfterLogin');
+            navigate(redirectPath);
+          } else {
+            navigate('/register');
+          }
         }
       }
     } catch (error: any) {
       dispatch(setError(error.message));
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 

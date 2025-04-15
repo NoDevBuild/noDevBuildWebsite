@@ -204,6 +204,16 @@ const Header = () => {
                 </Link>
               )}
 
+              {/* Show Dashboard button for users with active membership */}
+              {user?.membershipStatus === 'active' && (
+                <Link
+                  to="/dashboard"
+                  className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-all duration-200 font-bold shadow-md hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  Go to Dashboard
+                </Link>
+              )}
+
               {user ? (
                 <div className="relative">
                   <button
@@ -421,14 +431,14 @@ const Header = () => {
                     My Courses
                   </Link>
 
-                  <Link
+                  {/* <Link
                     to="/settings"
                     className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200"
                     onClick={() => setShowMobileMenu(false)}
                   >
                     <Settings className="h-5 w-5 mr-3 text-gray-500" />
                     Settings
-                  </Link>
+                  </Link> */}
 
                   <button
                     onClick={() => {
@@ -468,7 +478,7 @@ const Header = () => {
         </div>
       )}
       
-      {showBanner && (
+      {showBanner && !user?.membershipStatus?.active && (
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 py-2.5 relative z-10">
           <button 
             onClick={handlePromoClick}

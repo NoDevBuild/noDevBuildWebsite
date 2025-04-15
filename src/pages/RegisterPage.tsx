@@ -7,6 +7,12 @@ import { paymentService } from '../services/paymentService';
 import { referralService } from '../services/referralService';
 import { useToast } from '../contexts/ToastContext';
 
+interface VerificationResult {
+  isValid: boolean;
+  discountPercent?: number;
+  error?: string;
+}
+
 interface PlanDetails {
   type: 'basicPlan' | 'premiumPlan';
   originalPrice: number;
@@ -19,9 +25,11 @@ const RegisterPage: React.FC = () => {
   const { showToast } = useToast();
   const [selectedPlan, setSelectedPlan] = useState<PlanDetails | null>(null);
   const [referralCode, setReferralCode] = useState('');
-  const [isValidatingCode, setIsValidatingCode] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [verificationResult, setVerificationResult] = useState<VerificationResult | null>(null);
   const [discountPercent, setDiscountPercent] = useState(0);
   const [codeError, setCodeError] = useState('');
+  const [isCodeApplied, setIsCodeApplied] = useState(false);
 
   useEffect(() => {
     // Load Razorpay script when component mounts
@@ -57,13 +65,52 @@ const RegisterPage: React.FC = () => {
   }, [navigate, showToast]);
 
   const handlePlanSelect = (type: 'basicPlan' | 'premiumPlan') => {
-    const price = type === 'basicPlan' ? 1800 : 5000;
+    const originalPrice = type === 'basicPlan' ? 1800 : 5000;
+    const discountedPrice = discountPercent > 0 
+      ? originalPrice - (originalPrice * discountPercent / 100)
+      : undefined;
+
+    if (!user) {
+      // Store the selected plan details in localStorage before redirecting
+      localStorage.setItem('selectedPlanType', type);
+      localStorage.setItem('selectedPlanPrice', originalPrice.toString());
+      localStorage.setItem('redirectAfterLogin', '/register');
+      navigate('/login');
+      return;
+    }
+
     setSelectedPlan({
       type,
-      originalPrice: price,
-      discountedPrice: discountPercent ? price - (price * discountPercent / 100) : undefined
+      originalPrice,
+      discountedPrice
     });
   };
+
+  // Add useEffect to check for stored plan after login
+  useEffect(() => {
+    if (user) {
+      const storedPlanType = localStorage.getItem('selectedPlanType') as 'basicPlan' | 'premiumPlan' | null;
+      const storedPlanPrice = localStorage.getItem('selectedPlanPrice');
+      
+      if (storedPlanType && storedPlanPrice) {
+        const originalPrice = parseInt(storedPlanPrice);
+        const discountedPrice = discountPercent > 0 
+          ? originalPrice - (originalPrice * discountPercent / 100)
+          : undefined;
+
+        setSelectedPlan({
+          type: storedPlanType,
+          originalPrice,
+          discountedPrice
+        });
+
+        // Clear the stored plan data
+        localStorage.removeItem('selectedPlanType');
+        localStorage.removeItem('selectedPlanPrice');
+        localStorage.removeItem('redirectAfterLogin');
+      }
+    }
+  }, [user, discountPercent]);
 
   const handleVerifyCode = async () => {
     if (!referralCode.trim()) {
@@ -71,28 +118,53 @@ const RegisterPage: React.FC = () => {
       return;
     }
 
-    setIsValidatingCode(true);
+    if (!selectedPlan) {
+      setCodeError('Please select a plan first');
+      return;
+    }
+
+    setIsVerifying(true);
     setCodeError('');
+    setVerificationResult(null);
 
     try {
-      const response = await referralService.verifyCode(referralCode.trim());
-      if (response.isValid) {
-        setDiscountPercent(response.discountPercent);
-        if (selectedPlan) {
-          const discountedPrice = selectedPlan.originalPrice - (selectedPlan.originalPrice * response.discountPercent / 100);
-          setSelectedPlan({
-            ...selectedPlan,
-            discountedPrice
-          });
-        }
-        showToast(`Referral code applied! ${response.discountPercent}% discount`, 'success');
-      } else {
-        setCodeError('Invalid referral code');
+      const response = await referralService.verifyCode(referralCode.trim(), selectedPlan.type);
+      setVerificationResult(response);
+      if (!response.isValid) {
+        setCodeError(response.error || 'Invalid referral code');
       }
     } catch (error: any) {
       setCodeError(error.message);
     } finally {
-      setIsValidatingCode(false);
+      setIsVerifying(false);
+    }
+  };
+
+  const handleApplyCode = () => {
+    if (!selectedPlan || !verificationResult?.isValid || !verificationResult.discountPercent) {
+      return;
+    }
+
+    setDiscountPercent(verificationResult.discountPercent);
+    const discountedPrice = selectedPlan.originalPrice - (selectedPlan.originalPrice * verificationResult.discountPercent / 100);
+    setSelectedPlan({
+      ...selectedPlan,
+      discountedPrice
+    });
+    setIsCodeApplied(true);
+    showToast(`Referral code applied! ${verificationResult.discountPercent}% discount`, 'success');
+  };
+
+  const handleRemoveCode = () => {
+    setReferralCode('');
+    setDiscountPercent(0);
+    setIsCodeApplied(false);
+    setVerificationResult(null);
+    if (selectedPlan) {
+      setSelectedPlan({
+        ...selectedPlan,
+        discountedPrice: undefined
+      });
     }
   };
 
@@ -105,7 +177,7 @@ const RegisterPage: React.FC = () => {
     }
 
     try {
-      await paymentService.initiatePayment(selectedPlan.type, user);
+      await paymentService.initiatePayment(selectedPlan.type, user, isCodeApplied ? referralCode : undefined);
     } catch (error: any) {
       console.error('Payment initiation failed:', error);
       showToast(error.message || 'Failed to initiate payment. Please try again.', 'error');
@@ -152,16 +224,6 @@ const RegisterPage: React.FC = () => {
                     )}
                   </div>
                 </div>
-
-                {/* Plan Features */}
-                <div className="space-y-2">
-                  {['Access to all courses', 'Community support', 'AI tools directory'].map((feature, index) => (
-                    <div key={index} className="flex items-center text-gray-600">
-                      <Check className="w-5 h-5 text-green-500 mr-2" />
-                      <span>{feature}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
 
@@ -170,30 +232,86 @@ const RegisterPage: React.FC = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Have a referral code?
               </label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={referralCode}
-                  onChange={(e) => setReferralCode(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="Enter code"
-                />
-                <button
-                  onClick={handleVerifyCode}
-                  disabled={isValidatingCode}
-                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50"
-                >
-                  {isValidatingCode ? 'Verifying...' : 'Apply'}
-                </button>
+              <div className="space-y-4">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={referralCode}
+                    onChange={(e) => setReferralCode(e.target.value)}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    placeholder="Enter code"
+                    disabled={isCodeApplied}
+                  />
+                  {!isCodeApplied && !verificationResult && (
+                    <button
+                      onClick={handleVerifyCode}
+                      disabled={isVerifying}
+                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+                    >
+                      {isVerifying ? (
+                        <>
+                          <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Verifying...
+                        </>
+                      ) : (
+                        'Verify'
+                      )}
+                    </button>
+                  )}
+                  {verificationResult && !isCodeApplied && (
+                    <button
+                      onClick={handleApplyCode}
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    >
+                      Apply
+                    </button>
+                  )}
+                  {isCodeApplied && (
+                    <button
+                      onClick={handleRemoveCode}
+                      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+                
+                {verificationResult && !isCodeApplied && (
+                  <div className={`p-3 rounded-lg ${verificationResult.isValid ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                    {verificationResult.isValid ? (
+                      <div className="flex items-center gap-2">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Valid code! {verificationResult.discountPercent}% discount available</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        <span>{verificationResult.error || 'Invalid referral code'}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                {codeError && (
+                  <p className="text-sm text-red-600">{codeError}</p>
+                )}
+                
+                {isCodeApplied && (
+                  <div className="p-3 bg-green-50 text-green-700 rounded-lg flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>{discountPercent}% discount applied!</span>
+                  </div>
+                )}
               </div>
-              {codeError && (
-                <p className="mt-2 text-sm text-red-600">{codeError}</p>
-              )}
-              {discountPercent > 0 && (
-                <p className="mt-2 text-sm text-green-600">
-                  {discountPercent}% discount applied!
-                </p>
-              )}
             </div>
 
             {/* Payment Button */}
@@ -249,13 +367,18 @@ const RegisterPage: React.FC = () => {
                   <span className="text-3xl sm:text-4xl font-bold text-[#1e293b]">₹1,800</span>
                   <span className="text-lg sm:text-xl text-gray-600">/year</span>
                 </div>
+                {selectedPlan?.type === 'basicPlan' && selectedPlan?.discountedPrice && (
+                  <div className="mt-2 text-green-600 font-semibold">
+                    After discount: ₹{selectedPlan.discountedPrice}
+                  </div>
+                )}
               </div>
 
               <button
                 onClick={() => handlePlanSelect('basicPlan')}
                 className="w-full bg-[#1e293b] text-white rounded-lg py-3 sm:py-4 font-semibold hover:bg-[#334155] transition-colors text-base sm:text-lg"
               >
-                {user ? 'Proceed to Checkout' : 'Select Plan'}
+                Select Plan
               </button>
             </div>
 
@@ -267,13 +390,18 @@ const RegisterPage: React.FC = () => {
                   <span className="text-gray-400 line-through text-xl sm:text-2xl">₹6,000</span>
                   <span className="text-3xl sm:text-4xl font-bold text-[#1e293b]">₹5,000</span>
                 </div>
+                {selectedPlan?.type === 'premiumPlan' && selectedPlan?.discountedPrice && (
+                  <div className="mt-2 text-green-600 font-semibold">
+                    After discount: ₹{selectedPlan.discountedPrice}
+                  </div>
+                )}
               </div>
 
               <button
                 onClick={() => handlePlanSelect('premiumPlan')}
                 className="w-full bg-white text-[#1e293b] border-2 border-[#1e293b] rounded-lg py-3 sm:py-4 font-semibold hover:bg-gray-50 transition-colors text-base sm:text-lg"
               >
-                {user ? 'Proceed to Checkout' : 'Select Plan'}
+                Select Plan
               </button>
             </div>
           </div>
