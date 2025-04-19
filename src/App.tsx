@@ -38,6 +38,7 @@ import UserDashboardPage from './pages/UserDashboardPage'
 import UserMembershipPage from './pages/UserMembershipPage'
 import PitchDeck from './pages/PitchDeck'
 import PlacementsPage from './pages/PlacementsPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
 
 function App() {
   const location = useLocation();
@@ -166,6 +167,7 @@ function App() {
         <Route path='/dashboard/my-courses' element={<UserDashboardPage />} />
         <Route path='/dashboard/my-courses/:courseSlug' element={<UserDashboardPage />} />
         <Route path='/placements' element={<PlacementsPage />} />
+        <Route path='/forgot-password' element={<ForgotPasswordPage />} />
         <Route
           path='/'
           element={

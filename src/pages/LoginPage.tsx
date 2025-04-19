@@ -108,19 +108,8 @@ const LoginPage: React.FC = () => {
     setFullName('');
   };
 
-  const handleForgotPassword = async () => {
-    if (!email) {
-      dispatch(setError('Please enter your email address'));
-      return;
-    }
-
-    dispatch(setLoading(true));
-    try {
-      await authService.resetPassword(email);
-      dispatch(setError('Password reset link has been sent to your email'));
-    } catch (error: any) {
-      dispatch(setError(error.message));
-    }
+  const handleForgotPassword = () => {
+    navigate('/forgot-password');
   };
 
   if (loading) {
