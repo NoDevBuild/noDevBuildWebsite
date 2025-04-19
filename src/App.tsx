@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { HelmetProvider } from 'react-helmet-async';
 import { setUser, setInitialized } from './store/authSlice';
 import { setLoading, setCourses, setError } from './store/coursesSlice';
 import { RootState } from './store/store';
@@ -8,6 +9,7 @@ import { scrollToTop } from './utils/helpers';
 import { courseService } from './services/courseService';
 import { authService } from './services/authService';
 import api from './services/api';
+import SEO from './components/SEO';
 
 // Components
 import Header from './components/Header'
@@ -144,50 +146,186 @@ function App() {
   }
 
   return (
-    <div className='min-h-screen bg-[#0d1117]'>
-      {!isLoginPage && !isDashboardPage && !isPitchDeckPage && <Header />}
-      <Routes>
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/register' element={<RegisterPage />} />
-        <Route path='/startup-builder' element={<StartupBuilder />} />
-        <Route path='/pitch-deck' element={<PitchDeck />} />
-        <Route path='/admin' element={<AdminPage />} />
-        <Route path='/courses' element={<CoursesPage />} />
-        <Route path='/courses/:courseId' element={<CourseDetailPage />} />
-        <Route path='/privacy-policy' element={<PrivacyPolicy />} />
-        <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
-        <Route path='/cancellation-refund' element={<CancellationRefund />} />
-        <Route path='/contact' element={<ContactUs />} />
-        <Route path='/ai-tools' element={<AIToolsPage />} />
-        <Route path='/ai-tools/:id' element={<AIToolDetailPage />} />
-        <Route path='/investors' element={<InvestorsDirectoryPage />} />
-        <Route path='/dashboard' element={<UserDashboardPage />} />
-        <Route path='/dashboard/membership' element={<UserMembershipPage />} />
-        <Route path='/dashboard/profile' element={<UserDashboardPage />} />
-        <Route path='/dashboard/my-courses' element={<UserDashboardPage />} />
-        <Route path='/dashboard/my-courses/:courseSlug' element={<UserDashboardPage />} />
-        <Route path='/placements' element={<PlacementsPage />} />
-        <Route path='/forgot-password' element={<ForgotPasswordPage />} />
-        <Route
-          path='/'
-          element={
-            <main className='bg-[#0d1117]'>
-              <Hero />
-              <div className='bg-white'>
-                <Courses />
-                <WhyNoCode />
-                <Benefits />
-                <InvestorsSection />
-                {/* <Instructors /> */}
-                {/* <Testimonials /> */}
-              </div>
-            </main>
-          }
-        />
-        <Route path='*' element={<Navigate to='/' replace />} />
-      </Routes>
-      {!isLoginPage && !isDashboardPage && !isPitchDeckPage && <Footer />}
-    </div>
+    <HelmetProvider>
+      <div className='min-h-screen bg-[#0d1117]'>
+        {!isLoginPage && !isDashboardPage && !isPitchDeckPage && <Header />}
+        <Routes>
+          <Route path='/login' element={
+            <>
+              <SEO 
+                title="Login"
+                description="Sign in to your NoDev Build account to access courses, AI tools, and more."
+                keywords="login, sign in, account, authentication"
+              />
+              <LoginPage />
+            </>
+          } />
+          <Route path='/register' element={
+            <>
+              <SEO 
+                title="Register"
+                description="Join NoDev Build to learn no-code development and AI tools. Start your journey today!"
+                keywords="register, sign up, membership, courses"
+              />
+              <RegisterPage />
+            </>
+          } />
+          <Route path='/startup-builder' element={
+            <>
+              <SEO 
+                title="Startup Builder"
+                description="Build your startup with NoDev Build's comprehensive startup builder toolkit."
+                keywords="startup, founder, business, entrepreneurship"
+              />
+              <StartupBuilder />
+            </>
+          } />
+          <Route path='/pitch-deck' element={
+            <>
+              <SEO 
+                title="Pitch Deck"
+                description="Create professional pitch decks for your startup with our AI-powered tools."
+                keywords="pitch deck, presentation, startup, fundraising"
+              />
+              <PitchDeck />
+            </>
+          } />
+          <Route path='/admin' element={<AdminPage />} />
+          <Route path='/courses' element={
+            <>
+              <SEO 
+                title="Courses"
+                description="Explore our comprehensive courses on no-code development and AI tools."
+                keywords="courses, learning, education, tutorials"
+              />
+              <CoursesPage />
+            </>
+          } />
+          <Route path='/courses/:courseId' element={<CourseDetailPage />} />
+          <Route path='/privacy-policy' element={
+            <>
+              <SEO 
+                title="Privacy Policy"
+                description="Learn about how NoDev Build protects and handles your personal information."
+                keywords="privacy, policy, data protection"
+              />
+              <PrivacyPolicy />
+            </>
+          } />
+          <Route path='/terms-and-conditions' element={
+            <>
+              <SEO 
+                title="Terms and Conditions"
+                description="Read our terms and conditions for using NoDev Build's services."
+                keywords="terms, conditions, legal, agreement"
+              />
+              <TermsAndConditions />
+            </>
+          } />
+          <Route path='/cancellation-refund' element={
+            <>
+              <SEO 
+                title="Cancellation & Refund Policy"
+                description="Learn about our cancellation and refund policies at NoDev Build."
+                keywords="cancellation, refund, policy"
+              />
+              <CancellationRefund />
+            </>
+          } />
+          <Route path='/contact' element={
+            <>
+              <SEO 
+                title="Contact Us"
+                description="Get in touch with the NoDev Build team for support and inquiries."
+                keywords="contact, support, help, inquiry"
+              />
+              <ContactUs />
+            </>
+          } />
+          <Route path='/ai-tools' element={
+            <>
+              <SEO 
+                title="AI Tools Directory"
+                description="Discover and learn about the best AI tools for your projects."
+                keywords="AI tools, artificial intelligence, automation, productivity"
+              />
+              <AIToolsPage />
+            </>
+          } />
+          <Route path='/ai-tools/:id' element={<AIToolDetailPage />} />
+          <Route path='/investors' element={
+            <>
+              <SEO 
+                title="Investors Directory"
+                description="Connect with investors and find funding opportunities for your startup."
+                keywords="investors, funding, venture capital, startup funding"
+              />
+              <InvestorsDirectoryPage />
+            </>
+          } />
+          <Route path='/dashboard' element={<UserDashboardPage />} />
+          <Route path='/dashboard/membership' element={<UserMembershipPage />} />
+          <Route path='/dashboard/profile' element={<UserDashboardPage />} />
+          <Route path='/dashboard/my-courses' element={<UserDashboardPage />} />
+          <Route path='/dashboard/my-courses/:courseSlug' element={<UserDashboardPage />} />
+          <Route path='/placements' element={
+            <>
+              <SEO 
+                title="Placements"
+                description="Find job opportunities and get placed in top companies after completing our courses."
+                keywords="placements, jobs, career, employment"
+              />
+              <PlacementsPage />
+            </>
+          } />
+          <Route path='/forgot-password' element={
+            <>
+              <SEO 
+                title="Forgot Password"
+                description="Reset your NoDev Build account password securely."
+                keywords="password reset, forgot password, account recovery"
+              />
+              <ForgotPasswordPage />
+            </>
+          } />
+          <Route
+            path='/'
+            element={
+              <>
+                <SEO 
+                  title="Home"
+                  description="Master no-code development and AI tools with NoDev Build. Learn to build apps, websites, and automate workflows without coding."
+                  keywords="no-code, AI, development, coding, programming, web development, automation"
+                  structuredData={{
+                    "@context": "https://schema.org",
+                    "@type": "WebSite",
+                    "name": "NoDev Build",
+                    "url": "https://nodevbuild.com",
+                    "description": "Master no-code development and AI tools with NoDev Build",
+                    "potentialAction": {
+                      "@type": "SearchAction",
+                      "target": "https://nodevbuild.com/search?q={search_term_string}",
+                      "query-input": "required name=search_term_string"
+                    }
+                  }}
+                />
+                <main className='bg-[#0d1117]'>
+                  <Hero />
+                  <div className='bg-white'>
+                    <Courses />
+                    <WhyNoCode />
+                    <Benefits />
+                    <InvestorsSection />
+                  </div>
+                </main>
+              </>
+            }
+          />
+          <Route path='*' element={<Navigate to='/' replace />} />
+        </Routes>
+        {!isLoginPage && !isDashboardPage && !isPitchDeckPage && <Footer />}
+      </div>
+    </HelmetProvider>
   );
 }
 
