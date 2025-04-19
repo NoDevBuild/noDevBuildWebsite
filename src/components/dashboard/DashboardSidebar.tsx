@@ -141,13 +141,13 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             {sidebarOpen && <span>Profile</span>}
           </Link>
 
-          <Link 
+          {/* <Link 
             to="/support"
             className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-colors"
           >
             <HelpCircle className="h-5 w-5" />
             {sidebarOpen && <span>Support</span>}
-          </Link>
+          </Link> */}
 
           <button 
             onClick={handleLogout}

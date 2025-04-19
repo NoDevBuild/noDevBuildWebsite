@@ -1,13 +1,36 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
-const FAQ = ({ faqs, title = "FAQs" }) => {
+const FAQ = () => {
   const [openFaq, setOpenFaq] = useState(null);
+
+  const faqs = [
+    {
+      question: "Who is this course for?",
+      answer: "It's for beginners, entrepreneurs, marketers, operators, consultants, and intermediate Glide users who want to build no-code apps or websites."
+    },
+    {
+      question: "What will I learn?",
+      answer: "You'll learn to build websites with Webflow and Carrd, mobile apps with Glide, automations with Zapier, and workflows with Airtable. You'll also cover data structures, databases, design basics, and how to integrate no-code tools."
+    },
+    {
+      question: "Who is No Dev Build for?",
+      answer: "We serve students, startup founders, educators, and career coaches who want to build or offer tech-driven solutions without hiring developers."
+    },
+    {
+      question: "What can I build with No Dev Build?",
+      answer: "You can build apps, websites, AI tools, automation workflows, career portals, and even personalized study platforms — all without coding."
+    },
+    {
+      question: "Do I need coding experience?",
+      answer: "No. It's beginner-friendly and requires no prior coding knowledge."
+    }
+  ];
 
   return (
     <div className="mb-8 sm:mb-12">
       <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
-        {title}
+        Frequently Asked Questions
       </h2>
       <div className="space-y-3 sm:space-y-4">
         {faqs.map((faq, index) => (

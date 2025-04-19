@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '../../store/authSlice';
 import { authService } from '../../services/authService';
 import { User } from '../../services/authService';
+import MembershipPage from './MembershipPage';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -71,45 +72,7 @@ const Dashboard = () => {
       case 'profile':
         return <ProfilePage />;
       case 'membership':
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-6">My Membership</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}>
-                <h3 className="text-xl font-bold mb-4">Current Plan</h3>
-                <div className="flex items-center mb-4">
-                  <div className={`${getBadgeColor()} text-white px-3 py-1 rounded-full mr-3`}>
-                    {membershipType}
-                  </div>
-                  {membershipType !== "Lifetime" && (
-                    <span>{daysRemaining} days remaining</span>
-                  )}
-                </div>
-                <p className="mb-4">Enjoy all the benefits of your {membershipType} membership.</p>
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
-                  Upgrade Plan
-                </button>
-              </div>
-              <div className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}>
-                <h3 className="text-xl font-bold mb-4">Payment History</h3>
-                <div className="space-y-4">
-                  {paymentHistory.map((payment: { id: number; date: string; amount: string; status: string; plan: string }) => (
-                    <div key={payment.id} className="flex justify-between items-center border-b pb-2">
-                      <div>
-                        <p className="font-medium">{payment.plan}</p>
-                        <p className="text-sm text-gray-500">{payment.date}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">{payment.amount}</p>
-                        <p className="text-sm text-green-500">{payment.status}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+        return <MembershipPage />;
       case 'my-courses':
         return (
           <div className="p-6">
