@@ -25,9 +25,9 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold">Home</h1>
         <div className="flex items-center gap-4">
-          <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+          {/* <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
             <Bell className="h-5 w-5" />
-          </button>
+          </button> */}
           <button 
             onClick={toggleDarkMode}
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"

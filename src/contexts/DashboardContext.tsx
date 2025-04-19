@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { User } from '../types/user';
 import { MembershipType } from '../types/membership';
 import { authService } from '../services/authService';
@@ -79,8 +79,21 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({ children, 
   const [activeSection, setActiveSection] = useState('dashboard');
   const [user, setUser] = useState<User | null>(initialUser);
   
-  // Mock data - in a real app, this would come from the backend
-  const [daysRemaining, setDaysRemaining] = useState(345); // Only relevant for annual plans
+  // Calculate days remaining based on subscription start date
+  const calculateDaysRemaining = (user: User | null) => {
+    if (!user?.subscriptionStartDate) return 0;
+    const membershipDuration = Math.floor((new Date().getTime() - new Date(user.subscriptionStartDate).getTime()) / (1000 * 60 * 60 * 24));
+    return Math.max(0, 365 - membershipDuration);
+  };
+
+  // Initialize daysRemaining based on user's subscription
+  const [daysRemaining, setDaysRemaining] = useState(calculateDaysRemaining(initialUser));
+
+  // Update daysRemaining when user changes
+  useEffect(() => {
+    setDaysRemaining(calculateDaysRemaining(user));
+  }, [user]);
+
   const [paymentHistory, setPaymentHistory] = useState<DashboardState['paymentHistory']>([
     { id: 1, date: "2024-05-15", amount: "$199.99", status: "Paid", plan: "Annual Premium" },
     { id: 2, date: "2023-05-15", amount: "$149.99", status: "Paid", plan: "Annual Standard" }

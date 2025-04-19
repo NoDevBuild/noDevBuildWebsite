@@ -51,7 +51,7 @@ const HomeContent: React.FC = () => {
               Here's what's happening with your learning journey
             </p>
           </div>
-          <div className="flex flex-wrap gap-3">
+          {/* <div className="flex flex-wrap gap-3">
             <Link
               to="/courses"
               className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
@@ -66,7 +66,7 @@ const HomeContent: React.FC = () => {
               <Database className="w-4 h-4 mr-2" />
               Explore AI Tools
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -119,7 +119,7 @@ const HomeContent: React.FC = () => {
         </div>
 
         {/* Learning Progress */}
-        <div className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm border-l-4 border-blue-500`}>
+        {/* <div className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm border-l-4 border-blue-500`}>
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Course Progress</p>
@@ -140,10 +140,10 @@ const HomeContent: React.FC = () => {
               ></div>
             </div>
           </div>
-        </div>
+        </div> */}
 
-        {/* Learning Time */}
-        <div className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm border-l-4 border-orange-500`}>
+        {/* Learning Time*/}
+        {/* <div className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm border-l-4 border-orange-500`}>
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Learning Time</p>
@@ -156,11 +156,11 @@ const HomeContent: React.FC = () => {
               <Timer className="h-6 w-6 text-orange-500" />
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Recent Activity */}
-      <div className={`mb-8 p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}>
+      {/* <div className={`mb-8 p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}>
         <h2 className="text-xl font-bold mb-6">Recent Activity</h2>
         <div className="space-y-4">
           <div className="flex items-start gap-4">
@@ -202,10 +202,10 @@ const HomeContent: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Learning Goals */}
-      <div className={`mb-8 p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}>
+      {/* <div className={`mb-8 p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}>
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold">Learning Goals</h2>
           <button className="text-sm text-blue-500 hover:text-blue-600 flex items-center">
@@ -245,7 +245,7 @@ const HomeContent: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Upcoming Events */}
       <div className={`grid grid-cols-1 lg:grid-cols-2 gap-6`}>
