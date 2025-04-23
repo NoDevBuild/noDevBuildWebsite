@@ -18,10 +18,10 @@ const PoweredBy = () => {
               <img 
                 src="/bits-dubai-campus-logo.png" 
                 alt="BITS Dubai Campus" 
-                className="h-24 w-auto object-contain"
+                className="h-30 w-auto object-contain"
               />
             </a>
-            <a 
+            {/* <a 
               href="https://pieds-bitspilani.org/" 
               target="_blank" 
               rel="noopener noreferrer"
@@ -32,7 +32,7 @@ const PoweredBy = () => {
                 alt="PIEDS BITS Pilani" 
                 className="h-36 w-auto object-contain"
               />
-            </a>
+            </a> */}
           </div>
         </div>
       </div>
