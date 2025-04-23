@@ -116,7 +116,7 @@ function App() {
     fetchCourses();
   }, [dispatch]);
 
-  if (initialized) {
+  if (!initialized) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="relative w-96 h-96">
