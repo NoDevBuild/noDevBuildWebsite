@@ -17,6 +17,7 @@ import Hero from './components/Hero'
 import WhyNoCode from './components/WhyNoCode'
 import Instructors from './components/Instructors'
 import Courses from './components/Courses'
+import PoweredBy from './components/PoweredBy'
 import Benefits from './components/Benefits'
 import Testimonials from './components/Testimonials'
 import Footer from './components/Footer'
@@ -133,6 +134,7 @@ function App() {
 
   return (
     <HelmetProvider>
+      <SEO />
       <div className='min-h-screen bg-[#0d1117]'>
         {!isLoginPage && !isDashboardPage && !isPitchDeckPage && <Header />}
         <Routes>
@@ -298,8 +300,10 @@ function App() {
                 <main className='bg-[#0d1117]'>
                   <Hero />
                   <div className='bg-white'>
+                    <PoweredBy />
                     <Courses />
                     <WhyNoCode />
+                    {/* <Instructors /> */}
                     <Benefits />
                     <InvestorsSection />
                   </div>
