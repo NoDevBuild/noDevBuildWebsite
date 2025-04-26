@@ -75,6 +75,8 @@ const RegisterPage: React.FC = () => {
       localStorage.setItem('selectedPlanType', type);
       localStorage.setItem('selectedPlanPrice', originalPrice.toString());
       localStorage.setItem('redirectAfterLogin', '/register');
+      // Add a flag to indicate we're coming from plan selection
+      localStorage.setItem('fromPlanSelection', 'true');
       navigate('/login');
       return;
     }
@@ -91,8 +93,9 @@ const RegisterPage: React.FC = () => {
     if (user) {
       const storedPlanType = localStorage.getItem('selectedPlanType') as 'basicPlan' | 'premiumPlan' | null;
       const storedPlanPrice = localStorage.getItem('selectedPlanPrice');
+      const fromPlanSelection = localStorage.getItem('fromPlanSelection');
       
-      if (storedPlanType && storedPlanPrice) {
+      if (storedPlanType && storedPlanPrice && fromPlanSelection === 'true') {
         const originalPrice = parseInt(storedPlanPrice);
         const discountedPrice = discountPercent > 0 
           ? originalPrice - (originalPrice * discountPercent / 100)
@@ -108,6 +111,7 @@ const RegisterPage: React.FC = () => {
         localStorage.removeItem('selectedPlanType');
         localStorage.removeItem('selectedPlanPrice');
         localStorage.removeItem('redirectAfterLogin');
+        localStorage.removeItem('fromPlanSelection');
       }
     }
   }, [user, discountPercent]);

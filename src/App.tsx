@@ -70,16 +70,23 @@ function App() {
             const userProfile = await authService.getProfile(response.data.uid);
             dispatch(setUser(userProfile));
 
-            // Handle redirection based on membership status
-            if (isLoginPage && userProfile.membershipStatus === 'active') {
-              navigate('/dashboard');
-              return;
-            }
-
-            // If user is on dashboard but doesn't have active membership, redirect to register
-            if (isDashboardPage && userProfile.membershipStatus !== 'active') {
-              navigate('/register');
-              return;
+            // Check for redirectAfterLogin in localStorage
+            const redirectAfterLogin = localStorage.getItem('redirectAfterLogin');
+            
+            // Handle redirection based on membership status and redirectAfterLogin
+            if (redirectAfterLogin) {
+              // If there's a stored redirect path, navigate there and clear it
+              navigate(redirectAfterLogin);
+              localStorage.removeItem('redirectAfterLogin');
+            } else if (userProfile.membershipStatus === 'active') {
+              if (isLoginPage && !location.pathname.includes('/register')) {
+                navigate('/dashboard');
+              }
+            } else {
+              // If user is not active, keep them on register page
+              if (isDashboardPage) {
+                navigate('/register');
+              }
             }
           }
         } catch (error) {
@@ -99,7 +106,7 @@ function App() {
     };
 
     initializeAuth();
-  }, [dispatch, isLoginPage, isDashboardPage, navigate]);
+  }, [dispatch, isLoginPage, isDashboardPage, navigate, location.pathname]);
 
   // Fetch courses
   useEffect(() => {

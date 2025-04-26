@@ -36,10 +36,11 @@ const Dashboard = () => {
     isUpdating,
     handleUpdateDisplayName,
     handleCancelEdit,
-    setIsEditingName
+    setIsEditingName,
+    refreshUserData
   } = useDashboard();
 
-  // Set initial active section based on URL
+  // Set initial active section based on URL and refresh user data
   useEffect(() => {
     const path = location.pathname;
     if (path.includes('/dashboard')) {
@@ -47,6 +48,11 @@ const Dashboard = () => {
       setActiveSection(section);
     }
   }, [location, setActiveSection]);
+
+  // Refresh user data when component mounts
+  useEffect(() => {
+    refreshUserData();
+  }, []); // Empty dependency array means this runs only once on mount
 
   const handleLogout = async () => {
     try {
@@ -57,6 +63,22 @@ const Dashboard = () => {
       console.error('Error logging out:', error);
     }
   };
+
+  // If user is not available, redirect to login
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
+
+  // Show loading state while user data is being fetched
+  if (!user) {
+    return (
+      <div className={`min-h-screen flex items-center justify-center ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   // Render different content based on active section
   const renderDashboardContent = () => {

@@ -55,6 +55,7 @@ interface DashboardContextType extends DashboardState {
   handleUpdateDisplayName: () => Promise<void>;
   handleCancelEdit: () => void;
   getBadgeColor: () => string;
+  refreshUserData: () => Promise<void>;
 }
 
 // Create the context with a default value
@@ -155,6 +156,29 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({ children, 
     }
   };
 
+  // Add refreshUserData function
+  const refreshUserData = async () => {
+    try {
+      if (user?.uid) {
+        const updatedUser = await authService.getProfile(user.uid);
+        setUser(updatedUser);
+        
+        // Update related data based on new user info
+        if (updatedUser?.subscriptionStartDate) {
+          setDaysRemaining(calculateDaysRemaining(updatedUser));
+        }
+        
+        // You might want to fetch other related data here
+        // For example:
+        // const paymentHistory = await paymentService.getPaymentHistory(user.uid);
+        // setPaymentHistory(paymentHistory);
+      }
+    } catch (error) {
+      console.error('Error refreshing user data:', error);
+      showToast('Failed to refresh user data', 'error');
+    }
+  };
+
   // Create the context value
   const contextValue: DashboardContextType = {
     // State
@@ -190,6 +214,7 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({ children, 
     handleUpdateDisplayName,
     handleCancelEdit,
     getBadgeColor,
+    refreshUserData,
   };
 
   return (

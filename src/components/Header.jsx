@@ -251,14 +251,17 @@ const Header = () => {
                         </p>
                       </div>
                       
-                      <Link
-                        to="/dashboard"
-                        className="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
-                        onClick={() => setShowUserMenu(false)}
-                      >
-                        <User className="h-4 w-4 mr-3 text-gray-500" />
-                        Profile
-                      </Link>
+                      {/* In desktop menu */}
+                      {user?.membershipStatus === 'active' ? (
+                        <Link
+                          to="/dashboard"
+                          className="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          <User className="h-4 w-4 mr-3 text-gray-500" />
+                          Dashboard
+                        </Link>
+                      ) : null}
                       
                       <Link
                         to="/courses"
@@ -270,7 +273,7 @@ const Header = () => {
                       </Link>
                       
                       {/* Show Admin option in dropdown only for admin user */}
-                      {isAdmin && (
+                      {isAdmin ? (
                         <Link
                           to="/admin"
                           className="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
@@ -279,7 +282,7 @@ const Header = () => {
                           <Settings className="h-4 w-4 mr-3 text-gray-500" />
                           Admin Panel
                         </Link>
-                      )}
+                      ) : null}
                       
                       <button
                         onClick={handleLogout}
@@ -413,14 +416,17 @@ const Header = () => {
 
               {user ? (
                 <div className="px-3 py-4 border-t border-gray-100">
-                  <Link
-                    to="/profile"
-                    className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200"
-                    onClick={() => setShowMobileMenu(false)}
-                  >
-                    <User className="h-5 w-5 mr-3 text-gray-500" />
-                    Profile
-                  </Link>
+                  {/* In mobile menu */}
+                  {user?.membershipStatus === 'active' ? (
+                    <Link
+                      to="/dashboard"
+                      className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+                      onClick={() => setShowMobileMenu(false)}
+                    >
+                      <User className="h-5 w-5 mr-3 text-gray-500" />
+                      Dashboard
+                    </Link>
+                  ) : null}
 
                   <Link
                     to="/my-courses"

@@ -11,8 +11,12 @@ const Hero = () => {
   const { user } = useSelector((state) => state.auth);
 
   const handleButtonClick = () => {
-    if (!!user) {
-      navigate('/dashboard');
+    if (user) {
+      if (user.membershipStatus === 'active') {
+        navigate('/dashboard');
+      } else {
+        navigate('/register');
+      }
     } else {
       navigate('/register');
     }
