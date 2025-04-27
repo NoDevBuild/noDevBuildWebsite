@@ -102,38 +102,7 @@ const Dashboard = () => {
             <DashboardCourses />
           </div>
         );
-      
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-6">Startup Kit</h2>
-            <div className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}>
-              <p className="mb-4">Access your startup resources and tools here.</p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 border rounded-lg">
-                  <h3 className="font-bold mb-2">Business Plan Template</h3>
-                  <p className="text-sm mb-4">Download our comprehensive business plan template.</p>
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg transition-colors text-sm">
-                    Download
-                  </button>
-                </div>
-                <div className="p-4 border rounded-lg">
-                  <h3 className="font-bold mb-2">Financial Projections</h3>
-                  <p className="text-sm mb-4">Excel templates for financial forecasting.</p>
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg transition-colors text-sm">
-                    Download
-                  </button>
-                </div>
-                <div className="p-4 border rounded-lg">
-                  <h3 className="font-bold mb-2">Pitch Deck Template</h3>
-                  <p className="text-sm mb-4">Professional pitch deck template for investors.</p>
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg transition-colors text-sm">
-                    Download
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+
       case 'profile':
         return (
           <div className="p-6">
@@ -205,52 +174,6 @@ const Dashboard = () => {
           </div>
         );
         
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-6">Settings</h2>
-            <div className={`p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}>
-              <div className="mb-6">
-                <h3 className="text-xl font-bold mb-4">Appearance</h3>
-                <div className="flex items-center">
-                  <span className="mr-4">Dark Mode</span>
-                  <button 
-                    onClick={toggleDarkMode}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full ${
-                      darkMode ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
-                        darkMode ? 'translate-x-6' : 'translate-x-1'
-                      }`}
-                    />
-                  </button>
-                </div>
-              </div>
-              
-              <div className="mb-6">
-                <h3 className="text-xl font-bold mb-4">Notifications</h3>
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <input type="checkbox" id="email" className="mr-2" defaultChecked />
-                    <label htmlFor="email">Email Notifications</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input type="checkbox" id="push" className="mr-2" defaultChecked />
-                    <label htmlFor="push">Push Notifications</label>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="mb-6">
-                <h3 className="text-xl font-bold mb-4">Account</h3>
-                <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors">
-                  Delete Account
-                </button>
-              </div>
-            </div>
-          </div>
-        );
       default:
         return <HomeContent />;
     }

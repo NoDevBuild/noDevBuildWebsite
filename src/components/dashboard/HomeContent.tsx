@@ -77,7 +77,11 @@ const HomeContent: React.FC = () => {
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Membership</p>
-              <h3 className="text-xl font-bold mt-1">{user?.planType === 'annual' ? 'Annual Plan' : 'Lifetime'}</h3>
+              <h3 className="text-xl font-bold mt-1">
+                {user?.planType === 'premiumPlan' ? 'Premium Plan (Lifetime)' : 
+                 user?.planType === 'basicPlan' ? 'Basic Plan (1 Year)' : 
+                 user?.planType === 'collegePlan' ? 'College Plan (1 Year)' : 'No Plan'}
+              </h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                 Member for {membershipDuration} days
               </p>
@@ -86,7 +90,7 @@ const HomeContent: React.FC = () => {
               <Star className="h-6 w-6 text-purple-500" />
             </div>
           </div>
-          {user?.planType === 'annual' && (
+          {user?.planType !== 'premiumPlan' && (
             <div className="mt-4">
               <div className="flex justify-between text-sm mb-1">
                 <span className="text-gray-500 dark:text-gray-400">Days until renewal</span>

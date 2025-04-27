@@ -14,10 +14,41 @@ interface VerificationResult {
 }
 
 interface PlanDetails {
-  type: 'basicPlan' | 'premiumPlan';
+  type: 'basicPlan' | 'premiumPlan' | 'collegePlan';
   originalPrice: number;
   discountedPrice?: number;
+  validity: string;
 }
+
+const planDetails = [
+  {
+    type: 'basicPlan',
+    name: 'Basic Plan',
+    originalPrice: 7000,
+    currentPrice: 5000,
+    discountPercent: 29,
+    validity: '1 year',
+    features: ['Newsletters', 'Exclusive NoDevBuild Community', 'No-Code & AI Toolkit', 'Build Real Projects']
+  },
+  {
+    type: 'premiumPlan',
+    name: 'Premium Plan',
+    originalPrice: 15000,
+    currentPrice: 15000,
+    discountPercent: 0,
+    validity: 'Lifetime',
+    features: ['All Basic Plan Features', 'Startup Builder Founders\' Hub', 'Advanced Tools Access']
+  },
+  {
+    type: 'collegePlan',
+    name: 'College Plan',
+    originalPrice: 15000,
+    currentPrice: 1800,
+    discountPercent: 88,
+    validity: '1 year',
+    features: ['All Basic Plan Features', 'Special College Pricing', 'Student Resources']
+  }
+];
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -30,6 +61,7 @@ const RegisterPage: React.FC = () => {
   const [discountPercent, setDiscountPercent] = useState(0);
   const [codeError, setCodeError] = useState('');
   const [isCodeApplied, setIsCodeApplied] = useState(false);
+  const [activePlan, setActivePlan] = useState('basicPlan')
 
   useEffect(() => {
     // Load Razorpay script when component mounts
@@ -64,8 +96,11 @@ const RegisterPage: React.FC = () => {
     };
   }, [navigate, showToast]);
 
-  const handlePlanSelect = (type: 'basicPlan' | 'premiumPlan') => {
-    const originalPrice = type === 'basicPlan' ? 1800 : 5000;
+  const handlePlanSelect = (type: 'basicPlan' | 'premiumPlan' | 'collegePlan') => {
+    const plan = planDetails.find(p => p.type === type);
+    if (!plan) return;
+
+    const originalPrice = plan.currentPrice;
     const discountedPrice = discountPercent > 0 
       ? originalPrice - (originalPrice * discountPercent / 100)
       : undefined;
@@ -84,14 +119,15 @@ const RegisterPage: React.FC = () => {
     setSelectedPlan({
       type,
       originalPrice,
-      discountedPrice
+      discountedPrice,
+      validity: plan.validity
     });
   };
 
   // Add useEffect to check for stored plan after login
   useEffect(() => {
     if (user) {
-      const storedPlanType = localStorage.getItem('selectedPlanType') as 'basicPlan' | 'premiumPlan' | null;
+      const storedPlanType = localStorage.getItem('selectedPlanType') as 'basicPlan' | 'premiumPlan' | 'collegePlan' | null;
       const storedPlanPrice = localStorage.getItem('selectedPlanPrice');
       const fromPlanSelection = localStorage.getItem('fromPlanSelection');
       
@@ -104,7 +140,8 @@ const RegisterPage: React.FC = () => {
         setSelectedPlan({
           type: storedPlanType,
           originalPrice,
-          discountedPrice
+          discountedPrice,
+          validity: planDetails.find(p => p.type === storedPlanType)?.validity || '1 year'
         });
 
         // Clear the stored plan data
@@ -208,7 +245,7 @@ const RegisterPage: React.FC = () => {
               <div className="bg-gray-50 rounded-xl p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold">
-                    {selectedPlan.type === 'basicPlan' ? 'Basic Plan' : 'Premium Plan'}
+                    {selectedPlan.type === 'basicPlan' ? 'Basic Plan' : selectedPlan.type === 'premiumPlan' ? 'Premium Plan' : 'College Plan'}
                   </h3>
                   <div className="text-right">
                     <div className="text-2xl font-bold">
@@ -357,57 +394,61 @@ const RegisterPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto mb-8 sm:mb-12">
-            {/* Basic Plan */}
-            <div className="relative bg-white rounded-2xl shadow-xl p-6 sm:p-8 border-2 border-[#1e293b]">
-              <div className="absolute -top-3 right-6 sm:right-8 bg-[#fbbf24] text-white px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-bold">
-                20% off
-              </div>
-              
-              <div className="mb-6 sm:mb-8">
-                <h3 className="text-xl sm:text-2xl font-bold text-[#1e293b] mb-3 sm:mb-4">Basic Plan</h3>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-gray-400 line-through text-xl sm:text-2xl">₹2,000</span>
-                  <span className="text-3xl sm:text-4xl font-bold text-[#1e293b]">₹1,800</span>
-                  <span className="text-lg sm:text-xl text-gray-600">/year</span>
-                </div>
-                {selectedPlan?.type === 'basicPlan' && selectedPlan?.discountedPrice && (
-                  <div className="mt-2 text-green-600 font-semibold">
-                    After discount: ₹{selectedPlan.discountedPrice}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto mb-8 sm:mb-12">
+            {planDetails.map((plan) => (
+              <div 
+                key={plan.type}
+                onClick={() => {
+                  setActivePlan(plan.type);
+                  // handlePlanSelect(plan.type);
+                }}
+                className={`relative bg-white rounded-2xl shadow-xl p-6 sm:p-8 border-2 cursor-pointer transition-all duration-200 hover:shadow-lg ${
+                  activePlan === plan.type ? 'border-[#1e293b]' : 'border-transparent'
+                }`}
+              >
+                {plan.discountPercent > 0 && (
+                  <div className="absolute -top-3 right-6 sm:right-8 bg-[#fbbf24] text-white px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-bold">
+                    {plan.discountPercent}% off
                   </div>
                 )}
-              </div>
-
-              <button
-                onClick={() => handlePlanSelect('basicPlan')}
-                className="w-full bg-[#1e293b] text-white rounded-lg py-3 sm:py-4 font-semibold hover:bg-[#334155] transition-colors text-base sm:text-lg"
-              >
-                Select Plan
-              </button>
-            </div>
-
-            {/* Premium Plan */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
-              <div className="mb-6 sm:mb-8">
-                <h3 className="text-xl sm:text-2xl font-bold text-[#1e293b] mb-3 sm:mb-4">Premium Plan</h3>
-                <div className="flex items-baseline">
-                  <span className="text-gray-400 line-through text-xl sm:text-2xl">₹6,000</span>
-                  <span className="text-3xl sm:text-4xl font-bold text-[#1e293b]">₹5,000</span>
-                </div>
-                {selectedPlan?.type === 'premiumPlan' && selectedPlan?.discountedPrice && (
-                  <div className="mt-2 text-green-600 font-semibold">
-                    After discount: ₹{selectedPlan.discountedPrice}
+                
+                <div className="mb-6 sm:mb-8">
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#1e293b] mb-3 sm:mb-4">{plan.name}</h3>
+                  <div className="flex items-baseline gap-2">
+                    {plan.discountPercent > 0 && (
+                      <span className="text-gray-400 line-through text-xl sm:text-2xl">₹{plan.originalPrice.toLocaleString()}</span>
+                    )}
+                    <span className="text-3xl sm:text-4xl font-bold text-[#1e293b]">₹{plan.currentPrice.toLocaleString()}</span>
+                    <span className="text-lg sm:text-xl text-gray-600">
+                      {plan.type === 'premiumPlan' ? (
+                        <span className="font-bold text-[#1e293b]">/Lifetime</span>
+                      ) : (
+                        <span>/year</span>
+                      )}
+                    </span>
                   </div>
-                )}
-              </div>
+                  {selectedPlan?.type === plan.type && selectedPlan?.discountedPrice && (
+                    <div className="mt-2 text-green-600 font-semibold">
+                      After discount: ₹{selectedPlan.discountedPrice.toLocaleString()}
+                    </div>
+                  )}
+                </div>
 
-              <button
-                onClick={() => handlePlanSelect('premiumPlan')}
-                className="w-full bg-white text-[#1e293b] border-2 border-[#1e293b] rounded-lg py-3 sm:py-4 font-semibold hover:bg-gray-50 transition-colors text-base sm:text-lg"
-              >
-                Select Plan
-              </button>
-            </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePlanSelect(plan.type);
+                  }}
+                  className={`w-full rounded-lg py-3 sm:py-4 font-semibold transition-colors text-base sm:text-lg ${
+                    activePlan === plan.type 
+                      ? 'bg-[#1e293b] text-white hover:bg-[#334155]' 
+                      : 'bg-white text-[#1e293b] border-2 border-[#1e293b] hover:bg-gray-50'
+                  }`}
+                >
+                  Select Plan
+                </button>
+              </div>
+            ))}
           </div>
 
           <div className="max-w-4xl mx-auto mb-12 sm:mb-20">
@@ -415,7 +456,7 @@ const RegisterPage: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                 {/* First Row */}
                 {/* Newsletter */}
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 group">
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 group relative">
                   <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
                     <Newspaper className="w-5 sm:w-6 h-5 sm:h-6 text-blue-600" />
                   </div>
@@ -424,16 +465,19 @@ const RegisterPage: React.FC = () => {
                 </div>
 
                 {/* Startup Builder */}
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 group">
-                  <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <Rocket className="w-5 sm:w-6 h-5 sm:h-6 text-blue-600" />
+                {activePlan !== "basicPlan" && 
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 group relative">
+                    <div className="absolute -inset-2 bg-gradient-to-br from-purple-500/20 to-purple-600/20 blur-2xl -z-10"></div>
+                    <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                      <Rocket className="w-5 sm:w-6 h-5 sm:h-6 text-blue-600" />
+                    </div>
+                    <h4 className="text-lg sm:text-xl font-bold text-[#1e293b] mb-2">Startup Builder Founders' Hub</h4>
+                    <p className="text-sm sm:text-base text-gray-600">Expert-led startup strategies</p>
                   </div>
-                  <h4 className="text-lg sm:text-xl font-bold text-[#1e293b] mb-2">Startup Builder Founders' Hub</h4>
-                  <p className="text-sm sm:text-base text-gray-600">Expert-led startup strategies</p>
-                </div>
+                }
 
                 {/* Community */}
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 group">
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 group relative">
                   <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
                     <Users className="w-5 sm:w-6 h-5 sm:h-6 text-blue-600" />
                   </div>
@@ -444,7 +488,7 @@ const RegisterPage: React.FC = () => {
                 {/* Second Row - Centered */}
                 <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:max-w-[66%] mx-auto">
                   {/* No-Code & AI Toolkit */}
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 group">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 group relative">
                     <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
                       <Wrench className="w-5 sm:w-6 h-5 sm:h-6 text-blue-600" />
                     </div>
@@ -453,7 +497,7 @@ const RegisterPage: React.FC = () => {
                   </div>
 
                   {/* Real Projects */}
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 group">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 group relative">
                     <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
                       <BookOpen className="w-5 sm:w-6 h-5 sm:h-6 text-blue-600" />
                     </div>
