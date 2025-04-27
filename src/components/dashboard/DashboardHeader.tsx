@@ -43,7 +43,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           </button> */}
 
           {/* Dark mode toggle */}
-          <button
+          <button 
             onClick={toggleDarkMode}
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
           >

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useDashboard } from '../../contexts/DashboardContext';
 import DashboardSidebar from './DashboardSidebar';
 import DashboardHeader from './DashboardHeader';
@@ -8,16 +8,19 @@ import DashboardCourseDetail from './DashboardCourseDetail';
 import HomeContent from './HomeContent';
 import ProfilePage from './ProfilePage';
 import Avatar from '../common/Avatar';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../../store/authSlice';
 import { authService } from '../../services/authService';
 import { User } from '../../types/user';
 import MembershipPage from './MembershipPage';
+import type { RootState } from '../../store/store';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const { courseSlug } = useParams<{ courseSlug: string }>();
+  const courses = useSelector((state: RootState) => state.courses.items);
   const {
     darkMode,
     sidebarOpen,
@@ -181,11 +184,13 @@ const Dashboard = () => {
 
   // Map activeSection to a user-friendly title
   const getHeaderTitle = () => {
+    const path = location.pathname;
+    if (path.includes('/dashboard/my-courses')) {
+      return 'My Courses';
+    }
     switch (activeSection) {
       case 'dashboard':
         return 'Home';
-      case 'my-courses':
-        return 'My Courses';
       case 'profile':
         return 'My Profile';
       case 'membership':
@@ -194,6 +199,15 @@ const Dashboard = () => {
         return 'Dashboard';
     }
   };
+
+  // Get course name for subheader if on course detail page
+  let courseSubheader = '';
+  const path = location.pathname;
+  if (path.includes('/dashboard/my-courses/') && path !== '/dashboard/my-courses') {
+    const slug = path.split('/dashboard/my-courses/')[1];
+    const course = courses.find(c => c.slug === slug);
+    if (course) courseSubheader = course.title;
+  }
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
@@ -217,7 +231,12 @@ const Dashboard = () => {
           membershipType={membershipType}
           getBadgeColor={getBadgeColor}
         />
-
+        {/* Subheader for course detail */}
+        {courseSubheader && (
+          <div className="px-4 md:px-6 pt-2 text-sm text-gray-500 dark:text-gray-300 font-medium">
+            {courseSubheader}
+          </div>
+        )}
         {/* Home Content */}
         <div className="p-4 md:p-6">
           {renderDashboardContent()}
