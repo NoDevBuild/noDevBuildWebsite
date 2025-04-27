@@ -10,7 +10,7 @@ const ContactSlide = () => {
           </h2>
           <div className="max-w-3xl mx-auto">
             <p className="text-xl text-white/80 mb-12">
-              Contact us to learn more about how NoDev Build can help you transform your ideas into reality.
+              Contact us to learn more about how NoDevBuild can help you transform your ideas into reality.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <div className="bg-white/10 backdrop-blur-sm px-8 py-4 rounded-lg">

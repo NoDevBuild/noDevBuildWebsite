@@ -19,7 +19,7 @@ const VisionSlide = () => {
                 We believe that everyone should have the power to build their ideas, regardless of their technical background.
               </p>
               <p>
-                NoDev Build is creating a future where innovation is limited only by imagination, not by coding ability.
+                NoDevBuild is creating a future where innovation is limited only by imagination, not by coding ability.
               </p>
             </div>
           </div>

@@ -57,6 +57,12 @@ const Dashboard = () => {
     refreshUserData();
   }, []); // Empty dependency array means this runs only once on mount
 
+  // Set document title based on header title
+  useEffect(() => {
+    const pageTitle = getHeaderTitle();
+    document.title = pageTitle ? `${pageTitle} | NoDevBuild` : 'NoDevBuild';
+  }, [location.pathname]);
+
   const handleLogout = async () => {
     try {
       await authService.logout();

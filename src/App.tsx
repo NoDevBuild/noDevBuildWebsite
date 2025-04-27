@@ -131,7 +131,7 @@ function App() {
           {/* Logo Loader */}
           <img 
             src="/noDevBuildLogoLoader.gif" 
-            alt="NoDev Build Logo" 
+            alt="NoDevBuild Logo" 
             className="w-full h-full object-contain"
           />
         </div>
@@ -149,7 +149,7 @@ function App() {
             <>
               <SEO 
                 title="Login"
-                description="Sign in to your NoDev Build account to access courses, AI tools, and more."
+                description="Sign in to your NoDevBuild account to access courses, AI tools, and more."
                 keywords="login, sign in, account, authentication"
               />
               <LoginPage />
@@ -159,7 +159,7 @@ function App() {
             <>
               <SEO 
                 title="Register"
-                description="Join NoDev Build to learn no-code development and AI tools. Start your journey today!"
+                description="Join NoDevBuild to learn no-code development and AI tools. Start your journey today!"
                 keywords="register, sign up, membership, courses"
               />
               <RegisterPage />
@@ -169,7 +169,7 @@ function App() {
             <>
               <SEO 
                 title="Startup Builder"
-                description="Build your startup with NoDev Build's comprehensive startup builder toolkit."
+                description="Build your startup with NoDevBuild's comprehensive startup builder toolkit."
                 keywords="startup, founder, business, entrepreneurship"
               />
               <StartupBuilder />
@@ -201,7 +201,7 @@ function App() {
             <>
               <SEO 
                 title="Privacy Policy"
-                description="Learn about how NoDev Build protects and handles your personal information."
+                description="Learn about how NoDevBuild protects and handles your personal information."
                 keywords="privacy, policy, data protection"
               />
               <PrivacyPolicy />
@@ -211,7 +211,7 @@ function App() {
             <>
               <SEO 
                 title="Terms and Conditions"
-                description="Read our terms and conditions for using NoDev Build's services."
+                description="Read our terms and conditions for using NoDevBuild's services."
                 keywords="terms, conditions, legal, agreement"
               />
               <TermsAndConditions />
@@ -221,7 +221,7 @@ function App() {
             <>
               <SEO 
                 title="Cancellation & Refund Policy"
-                description="Learn about our cancellation and refund policies at NoDev Build."
+                description="Learn about our cancellation and refund policies at NoDevBuild."
                 keywords="cancellation, refund, policy"
               />
               <CancellationRefund />
@@ -231,7 +231,7 @@ function App() {
             <>
               <SEO 
                 title="Contact Us"
-                description="Get in touch with the NoDev Build team for support and inquiries."
+                description="Get in touch with the NoDevBuild team for support and inquiries."
                 keywords="contact, support, help, inquiry"
               />
               <ContactUs />
@@ -277,7 +277,7 @@ function App() {
             <>
               <SEO 
                 title="Forgot Password"
-                description="Reset your NoDev Build account password securely."
+                description="Reset your NoDevBuild account password securely."
                 keywords="password reset, forgot password, account recovery"
               />
               <ForgotPasswordPage />
@@ -289,14 +289,14 @@ function App() {
               <>
                 <SEO 
                   title="Home"
-                  description="Master no-code development and AI tools with NoDev Build. Learn to build apps, websites, and automate workflows without coding."
+                  description="Master no-code development and AI tools with NoDevBuild. Learn to build apps, websites, and automate workflows without coding."
                   keywords="no-code, AI, development, coding, programming, web development, automation"
                   structuredData={{
                     "@context": "https://schema.org",
                     "@type": "WebSite",
-                    "name": "NoDev Build",
+                    "name": "NoDevBuild",
                     "url": "https://nodevbuild.com",
-                    "description": "Master no-code development and AI tools with NoDev Build",
+                    "description": "Master no-code development and AI tools with NoDevBuild",
                     "potentialAction": {
                       "@type": "SearchAction",
                       "target": "https://nodevbuild.com/search?q={search_term_string}",

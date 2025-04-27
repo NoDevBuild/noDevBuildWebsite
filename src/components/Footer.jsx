@@ -43,7 +43,7 @@ const Footer = () => {
 
     try {
       await newsletterService.subscribe(email);
-      showToast("You've been subscribed to the NoDev Build Newsletter!", 'success');
+      showToast("You've been subscribed to the NoDevBuild Newsletter!", 'success');
       setEmail('');
     } catch (error) {
       console.error('Newsletter subscription error:', error);

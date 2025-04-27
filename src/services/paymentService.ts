@@ -46,7 +46,7 @@ export const paymentService = {
         key,
         amount,
         currency: 'INR',
-        name: 'NoDev Build',
+        name: 'NoDevBuild',
         description: `${planType === 'basicPlan' ? 'Basic' : 'Premium'} Plan${referralCode ? ' (with discount)' : ''}`,
         image: '/noDevBuild-logo.png',
         order_id: orderId,

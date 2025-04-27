@@ -26,7 +26,7 @@ const TermsAndConditions = () => {
               <div>
                 <h2 className="text-xl font-semibold text-white mb-3">Agreement to Terms</h2>
                 <div className="space-y-4 text-gray-300">
-                  <p>By accessing or using NoDev Build, you agree to be bound by these Terms and Conditions and our Privacy Policy. If you disagree with any part of the terms, you may not access our services.</p>
+                  <p>By accessing or using NoDevBuild, you agree to be bound by these Terms and Conditions and our Privacy Policy. If you disagree with any part of the terms, you may not access our services.</p>
                 </div>
               </div>
             </div>
@@ -41,7 +41,7 @@ const TermsAndConditions = () => {
               <div>
                 <h2 className="text-xl font-semibold text-white mb-3">Intellectual Property Rights</h2>
                 <div className="space-y-4 text-gray-300">
-                  <p>The Service and its original content, features, and functionality are owned by NoDev Build and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.</p>
+                  <p>The Service and its original content, features, and functionality are owned by NoDevBuild and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.</p>
                   <ul className="list-disc pl-5 space-y-2">
                     <li>Course content and materials are for personal use only</li>
                     <li>Redistribution or resale is strictly prohibited</li>

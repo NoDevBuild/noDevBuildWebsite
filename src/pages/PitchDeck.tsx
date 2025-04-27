@@ -77,7 +77,7 @@ const PitchDeck = () => {
         to="/" 
         className="fixed top-6 left-6 z-50 transition-transform duration-200 hover:scale-110"
       >
-        <img src="/noDevBuildFavicon.png" alt="NoDev Build" className="w-12 h-12" />
+        <img src="/noDevBuildFavicon.png" alt="NoDevBuild" className="w-12 h-12" />
       </Link>
 
       <div className="fixed right-6 top-1/2 transform -translate-y-1/2 space-y-2 z-50">

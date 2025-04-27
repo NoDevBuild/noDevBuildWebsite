@@ -18,7 +18,7 @@ const SEO: React.FC<SEOProps> = ({
   ogUrl = 'https://nodevbuild.com',
   structuredData,
 }) => {
-  const siteTitle = 'NoDev Build';
+  const siteTitle = 'NoDevBuild';
   const fullTitle = `${title} | ${siteTitle}`;
 
   return (
