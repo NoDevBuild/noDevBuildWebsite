@@ -1,18 +1,20 @@
 import React from 'react';
-import { Bell, Moon, Sun } from 'lucide-react';
-import { User } from '../types/user';
+import { Menu, Moon, Sun, Bell } from 'lucide-react';
+import { useDashboard } from '../../contexts/DashboardContext';
 import Avatar from '../common/Avatar';
 
 interface DashboardHeaderProps {
+  title: string;
   darkMode: boolean;
   toggleDarkMode: () => void;
-  user: User | null;
+  user: any;
   sidebarOpen: boolean;
   membershipType: string;
   getBadgeColor: () => string;
 }
 
 const DashboardHeader: React.FC<DashboardHeaderProps> = ({
+  title,
   darkMode,
   toggleDarkMode,
   user,
@@ -20,20 +22,39 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   membershipType,
   getBadgeColor
 }) => {
+  const { setSidebarOpen } = useDashboard();
+
   return (
     <header className={`sticky top-0 z-40 ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm px-6 py-3`}>
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">Home</h1>
+        {/* Mobile menu button - leftmost */}
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 mr-2"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+        <h1 className="text-xl font-bold flex-1 md:flex-none">{title}</h1>
         <div className="flex items-center gap-4">
-          {/* <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+          {/* Notifications */}
+          {/* <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 relative">
             <Bell className="h-5 w-5" />
+            <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
           </button> */}
-          <button 
+
+          {/* Dark mode toggle */}
+          <button
             onClick={toggleDarkMode}
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
           >
-            {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            {darkMode ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
           </button>
+
+          {/* User profile */}
           <div className="flex items-center gap-2">
             <div className="relative">
               <Avatar 

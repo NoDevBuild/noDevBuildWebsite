@@ -11,7 +11,7 @@ import Avatar from '../common/Avatar';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../store/authSlice';
 import { authService } from '../../services/authService';
-import { User } from '../../services/authService';
+import { User } from '../../types/user';
 import MembershipPage from './MembershipPage';
 
 const Dashboard = () => {
@@ -179,21 +179,37 @@ const Dashboard = () => {
     }
   };
 
+  // Map activeSection to a user-friendly title
+  const getHeaderTitle = () => {
+    switch (activeSection) {
+      case 'dashboard':
+        return 'Home';
+      case 'my-courses':
+        return 'My Courses';
+      case 'profile':
+        return 'My Profile';
+      case 'membership':
+        return 'Membership';
+      default:
+        return 'Dashboard';
+    }
+  };
+
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
       {/* Sidebar */}
       <DashboardSidebar 
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
-        handleLogout={handleLogout}
         activeSection={activeSection}
         setActiveSection={setActiveSection}
       />
 
       {/* Main Content */}
-      <div className={`${sidebarOpen ? 'ml-64' : 'ml-20'} transition-all duration-300 min-h-screen`}>
+      <div className={`${sidebarOpen ? 'md:ml-64' : 'md:ml-20'} transition-all duration-300 min-h-screen`}>
         {/* Top Bar */}
         <DashboardHeader 
+          title={getHeaderTitle()}
           darkMode={darkMode}
           toggleDarkMode={toggleDarkMode}
           user={user}
@@ -203,7 +219,9 @@ const Dashboard = () => {
         />
 
         {/* Home Content */}
-        {renderDashboardContent()}
+        <div className="p-4 md:p-6">
+          {renderDashboardContent()}
+        </div>
       </div>
     </div>
   );
