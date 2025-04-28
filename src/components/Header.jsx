@@ -484,7 +484,7 @@ const Header = () => {
         </div>
       )}
       
-      {showBanner && !user?.membershipStatus?.active && location.pathname !== '/register' && (
+      {showBanner && user?.membershipStatus !== 'active' && location.pathname !== '/register' && (
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 py-2.5 relative z-10">
           <button 
             onClick={handlePromoClick}
