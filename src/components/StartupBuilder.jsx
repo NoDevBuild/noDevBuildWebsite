@@ -58,12 +58,24 @@ const StartupBuilder = () => {
               Follow our proven roadmap to success with expert guidance every step of the way.
             </p>
 
-            <div className="flex items-center justify-center gap-4 text-2xl font-bold mb-8">
-              <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent animate-pulse">Build</span>
-              <span className="text-gray-400">•</span>
-              <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent animate-pulse [animation-delay:200ms]">Launch</span>
-              <span className="text-gray-400">•</span>
-              <span className="bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent animate-pulse [animation-delay:400ms]">Scale</span>
+            <div className="flex items-center justify-center gap-4 md:gap-12 text-xl md:text-4xl font-extrabold mb-8 relative">
+              {/* Build */}
+              <span className="relative flex items-center">
+                <span className="absolute inset-0 rounded-full blur-lg md:blur-2xl bg-purple-500/40 -z-10 w-full h-full"></span>
+                <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">Build</span>
+              </span>
+              <span className="text-gray-300">•</span>
+              {/* Launch */}
+              <span className="relative flex items-center">
+                <span className="absolute inset-0 rounded-full blur-lg md:blur-2xl bg-blue-500/40 -z-10 w-full h-full"></span>
+                <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Launch</span>
+              </span>
+              <span className="text-gray-300">•</span>
+              {/* Scale */}
+              <span className="relative flex items-center">
+                <span className="absolute inset-0 rounded-full blur-lg md:blur-2xl bg-green-500/40 -z-10 w-full h-full"></span>
+                <span className="bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">Scale</span>
+              </span>
             </div>
           </div>
 
