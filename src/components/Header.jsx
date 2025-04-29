@@ -337,7 +337,13 @@ const Header = () => {
 
             <div className="py-4">
               {user && (
-                <div className="px-5 py-4 border-b border-gray-100">
+                <button
+                  className="px-5 py-4 border-b border-gray-100 w-full text-left focus:outline-none"
+                  onClick={() => {
+                    navigate('/dashboard');
+                    setShowMobileMenu(false);
+                  }}
+                >
                   <div className="flex items-center space-x-3">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white shadow-md">
                       {user.photoURL ? (
@@ -361,7 +367,7 @@ const Header = () => {
                       </p>
                     </div>
                   </div>
-                </div>
+                </button>
               )}
 
               <div className="px-3 py-4">

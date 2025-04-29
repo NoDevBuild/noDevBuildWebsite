@@ -15,6 +15,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import Avatar from '../common/Avatar';
 import { authService } from '../../services/authService';
+import 'tippy.js/dist/tippy.css';
+import Tippy from '@tippyjs/react';
 
 interface DashboardSidebarProps {
   sidebarOpen: boolean;
@@ -96,7 +98,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             <img src="/main_logo.png" alt="NoDevBuild" className="h-10" />
           </Link>
         ) : (
-          <div className="w-full flex justify-center">
+          <div className="mx-auto w-12 flex justify-center">
             <img src="/noDevBuildFavicon.png" alt="Logo" className="h-10 w-10 object-contain" />
           </div>
         )}
@@ -112,40 +114,50 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
         <nav>
           <ul className="space-y-2 px-2">
             <li>
-              <Link 
-                to="/dashboard"
-                onClick={() => handleNavClick('dashboard')}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg w-full ${
-                  activeSection === 'dashboard' 
-                    ? darkMode 
-                      ? 'bg-gray-800 text-gray-100' 
-                      : 'bg-white/10 text-white'
-                    : darkMode
-                      ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-100'
-                      : 'text-white/80 hover:bg-white/10 hover:text-white'
-                } transition-colors`}
-              >
-                <Home className="h-5 w-5" />
-                {sidebarOpen && <span>Home</span>}
-              </Link>
+              <Tippy content="Home" disabled={sidebarOpen} placement="right" theme="light-border" animation="none" arrow={true} delay={[0, 0]} moveTransition="" duration={0} hideOnClick={true} interactive={false} touch={false}>
+                <Link 
+                  to="/dashboard"
+                  onClick={() => handleNavClick('dashboard')}
+                  className={`flex items-center gap-3 py-3 rounded-lg transition-colors
+                    ${sidebarOpen ? 'justify-start px-4 w-full' : 'justify-center'}
+                    ${
+                      activeSection === 'dashboard' 
+                        ? darkMode 
+                          ? 'bg-gray-800 text-gray-100' 
+                          : 'bg-white/10 text-white'
+                        : darkMode
+                          ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-100'
+                          : 'text-white/80 hover:bg-white/10 hover:text-white'
+                    }
+                  `}
+                >
+                  <Home className="h-5 w-5" />
+                  {sidebarOpen && <span>Home</span>}
+                </Link>
+              </Tippy>
             </li>
             <li>
-              <Link 
-                to="/dashboard/my-courses"
-                onClick={() => handleNavClick('my-courses')}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg w-full ${
-                  activeSection === 'my-courses'
-                    ? darkMode
-                      ? 'bg-gray-800 text-gray-100'
-                      : 'bg-white/10 text-white'
-                    : darkMode
-                      ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-100'
-                      : 'text-white/80 hover:bg-white/10 hover:text-white'
-                } transition-colors`}
-              >
-                <BookOpen className="h-5 w-5" />
-                {sidebarOpen && <span>My Courses</span>}
-              </Link>
+              <Tippy content="My Courses" disabled={sidebarOpen} placement="right" theme="light-border" animation="none" arrow={true} delay={[0, 0]} moveTransition="" duration={0} hideOnClick={true} interactive={false} touch={false}>
+                <Link 
+                  to="/dashboard/my-courses"
+                  onClick={() => handleNavClick('my-courses')}
+                  className={`flex items-center gap-3 py-3 rounded-lg transition-colors
+                    ${sidebarOpen ? 'justify-start px-4 w-full' : 'justify-center'}
+                    ${
+                      activeSection === 'my-courses'
+                        ? darkMode
+                          ? 'bg-gray-800 text-gray-100'
+                          : 'bg-white/10 text-white'
+                        : darkMode
+                          ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-100'
+                          : 'text-white/80 hover:bg-white/10 hover:text-white'
+                    }
+                  `}
+                >
+                  <BookOpen className="h-5 w-5" />
+                  {sidebarOpen && <span>My Courses</span>}
+                </Link>
+              </Tippy>
             </li>
           </ul>
         </nav>
@@ -153,58 +165,75 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 
       <div className="absolute bottom-0 left-0 right-0 p-4">
         <div className="space-y-2">
-          <Link 
-            to="/dashboard/profile"
-            onClick={() => handleNavClick('profile')}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg w-full ${
-              activeSection === 'profile'
-                ? darkMode
-                  ? 'bg-gray-800 text-gray-100'
-                  : 'bg-white/10 text-white'
-                : darkMode
-                  ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-100'
-                  : 'text-white/80 hover:bg-white/10 hover:text-white'
-            } transition-colors`}
-          >
-            <User className="h-5 w-5" />
-            {sidebarOpen && <span>Profile</span>}
-          </Link>
+          <Tippy content="Profile" disabled={sidebarOpen} placement="right" theme="light-border" animation="none" arrow={true} delay={[0, 0]} moveTransition="" duration={0} hideOnClick={true} interactive={false} touch={false}>
+            <Link 
+              to="/dashboard/profile"
+              onClick={() => handleNavClick('profile')}
+              className={`flex items-center gap-3 py-3 rounded-lg transition-colors
+                ${sidebarOpen ? 'justify-start px-4 w-full' : 'justify-center'}
+                ${
+                  activeSection === 'profile'
+                    ? darkMode
+                      ? 'bg-gray-800 text-gray-100'
+                      : 'bg-white/10 text-white'
+                    : darkMode
+                      ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-100'
+                      : 'text-white/80 hover:bg-white/10 hover:text-white'
+                }
+              `}
+            >
+              <User className="h-5 w-5" />
+              {sidebarOpen && <span>Profile</span>}
+            </Link>
+          </Tippy>
 
-          <button 
-            onClick={handleLogout}
-            className={`flex items-center gap-3 w-full px-4 py-3 rounded-lg ${
-              darkMode
-                ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-100'
-                : 'text-white/80 hover:bg-white/10 hover:text-white'
-            } transition-colors`}
-          >
-            <LogOut className="h-5 w-5" />
-            {sidebarOpen && <span>Logout</span>}
-          </button>
+          <Tippy content="Logout" disabled={sidebarOpen} placement="right" theme="light-border" animation="none" arrow={true} delay={[0, 0]} moveTransition="" duration={0} hideOnClick={true} interactive={false} touch={false}>
+            <button 
+              onClick={handleLogout}
+              className={`flex items-center gap-3 py-3 rounded-lg transition-colors
+                ${sidebarOpen ? 'justify-start px-4 w-full' : 'justify-center w-12 mx-auto'}
+                ${
+                  darkMode
+                    ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-100'
+                    : 'text-white/80 hover:bg-white/10 hover:text-white'
+                }
+              `}
+            >
+              <LogOut className="h-5 w-5" />
+              {sidebarOpen && <span>Logout</span>}
+            </button>
+          </Tippy>
 
           <div className={`border-t ${darkMode ? 'border-gray-800' : 'border-white/20'} my-4`}></div>
 
-          <Link 
-            to="/dashboard/profile"
-            onClick={() => handleNavClick('profile')}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg ${
-              darkMode
-                ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-100'
-                : 'text-white/80 hover:bg-white/10 hover:text-white'
-            } transition-colors`}
-          >
-            <Avatar 
-              name={user?.displayName || "User"}
-              size="sm"
-              className={`border-2 ${darkMode ? 'border-gray-700' : 'border-white'}`}
-            />
-            {sidebarOpen && (
-              <div>
-                <p className={`font-medium ${darkMode ? 'text-gray-200' : 'text-white'}`}>{user?.displayName || "User"}</p>
-                <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-white/60'}`}>{user?.email}</p>
-              </div>
-            )}
-          </Link>
+          <Tippy content={user?.displayName || "User"} disabled={sidebarOpen} placement="right" theme="light-border" animation="none" arrow={true} delay={[0, 0]} moveTransition="" duration={0} hideOnClick={true} interactive={false} touch={false}>
+            <Link 
+              to="/dashboard/profile"
+              onClick={() => handleNavClick('profile')}
+              className={`flex items-center gap-3 py-3 rounded-lg transition-colors
+                ${sidebarOpen ? 'justify-start px-4 w-full' : 'justify-center'}
+                ${
+                  darkMode
+                    ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-100'
+                    : 'text-white/80 hover:bg-white/10 hover:text-white'
+                }
+              `}
+            >
+              <span className="w-10 h-10 flex items-center justify-center">
+                <Avatar 
+                  name={user?.displayName || "User"}
+                  size="sm"
+                  className={`border-2 ${darkMode ? 'border-gray-700' : 'border-white'}`}
+                />
+              </span>
+              {sidebarOpen && (
+                <div>
+                  <p className={`font-medium ${darkMode ? 'text-gray-200' : 'text-white'}`}>{user?.displayName || "User"}</p>
+                  <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-white/60'}`}>{user?.email}</p>
+                </div>
+              )}
+            </Link>
+          </Tippy>
         </div>
       </div>
     </div>
