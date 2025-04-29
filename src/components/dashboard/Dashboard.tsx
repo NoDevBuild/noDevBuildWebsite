@@ -223,6 +223,7 @@ const Dashboard = () => {
         setSidebarOpen={setSidebarOpen}
         activeSection={activeSection}
         setActiveSection={setActiveSection}
+        darkMode={darkMode}
       />
 
       {/* Main Content */}

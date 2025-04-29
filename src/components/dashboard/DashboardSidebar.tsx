@@ -21,13 +21,15 @@ interface DashboardSidebarProps {
   setSidebarOpen: (open: boolean) => void;
   activeSection: string;
   setActiveSection: (section: string) => void;
+  darkMode?: boolean;
 }
 
 const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ 
   sidebarOpen, 
   setSidebarOpen, 
   activeSection,
-  setActiveSection
+  setActiveSection,
+  darkMode = false
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -64,7 +66,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
       {/* Mobile overlay when sidebar is open */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          className={`fixed inset-0 z-40 md:hidden ${darkMode ? 'bg-gray-900/90' : 'bg-black/50'}`}
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -72,7 +74,10 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
       {/* Sidebar */}
       <div className={`fixed top-0 left-0 h-full 
         ${sidebarOpen ? 'w-64' : 'w-20'} 
-        bg-gradient-to-b from-blue-600 via-blue-700 to-purple-800 text-white 
+        ${darkMode 
+          ? 'bg-gray-900' 
+          : 'bg-gradient-to-b from-blue-600 via-blue-700 to-purple-800'
+        } text-white 
         transition-all duration-300 z-50
         md:translate-x-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
@@ -85,7 +90,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           <X className="h-5 w-5" />
         </button>
 
-      <div className="p-4 flex items-center justify-between">
+      <div className={`p-4 flex items-center justify-between ${darkMode ? 'bg-gray-800' : ''}`}>
         {sidebarOpen ? (
           <Link to="/" className="flex items-center">
             <img src="/main_logo.png" alt="NoDevBuild" className="h-10" />
@@ -111,7 +116,13 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                 to="/dashboard"
                 onClick={() => handleNavClick('dashboard')}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg w-full ${
-                  activeSection === 'dashboard' ? 'bg-white/10 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'
+                  activeSection === 'dashboard' 
+                    ? darkMode 
+                      ? 'bg-gray-800 text-gray-100' 
+                      : 'bg-white/10 text-white'
+                    : darkMode
+                      ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-100'
+                      : 'text-white/80 hover:bg-white/10 hover:text-white'
                 } transition-colors`}
               >
                 <Home className="h-5 w-5" />
@@ -123,7 +134,13 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                 to="/dashboard/my-courses"
                 onClick={() => handleNavClick('my-courses')}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg w-full ${
-                  activeSection === 'my-courses' ? 'bg-white/10 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'
+                  activeSection === 'my-courses'
+                    ? darkMode
+                      ? 'bg-gray-800 text-gray-100'
+                      : 'bg-white/10 text-white'
+                    : darkMode
+                      ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-100'
+                      : 'text-white/80 hover:bg-white/10 hover:text-white'
                 } transition-colors`}
               >
                 <BookOpen className="h-5 w-5" />
@@ -140,7 +157,13 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             to="/dashboard/profile"
             onClick={() => handleNavClick('profile')}
             className={`flex items-center gap-3 px-4 py-3 rounded-lg w-full ${
-              activeSection === 'profile' ? 'bg-white/10 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'
+              activeSection === 'profile'
+                ? darkMode
+                  ? 'bg-gray-800 text-gray-100'
+                  : 'bg-white/10 text-white'
+                : darkMode
+                  ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-100'
+                  : 'text-white/80 hover:bg-white/10 hover:text-white'
             } transition-colors`}
           >
             <User className="h-5 w-5" />
@@ -149,28 +172,36 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 
           <button 
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+            className={`flex items-center gap-3 w-full px-4 py-3 rounded-lg ${
+              darkMode
+                ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-100'
+                : 'text-white/80 hover:bg-white/10 hover:text-white'
+            } transition-colors`}
           >
             <LogOut className="h-5 w-5" />
             {sidebarOpen && <span>Logout</span>}
           </button>
 
-          <div className="border-t border-white/20 my-4"></div>
+          <div className={`border-t ${darkMode ? 'border-gray-800' : 'border-white/20'} my-4`}></div>
 
           <Link 
             to="/dashboard/profile"
             onClick={() => handleNavClick('profile')}
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg ${
+              darkMode
+                ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-100'
+                : 'text-white/80 hover:bg-white/10 hover:text-white'
+            } transition-colors`}
           >
             <Avatar 
               name={user?.displayName || "User"}
               size="sm"
-              className="border-2 border-white"
+              className={`border-2 ${darkMode ? 'border-gray-700' : 'border-white'}`}
             />
             {sidebarOpen && (
               <div>
-                <p className="text-white font-medium">{user?.displayName || "User"}</p>
-                <p className="text-white/60 text-sm">{user?.email}</p>
+                <p className={`font-medium ${darkMode ? 'text-gray-200' : 'text-white'}`}>{user?.displayName || "User"}</p>
+                <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-white/60'}`}>{user?.email}</p>
               </div>
             )}
           </Link>

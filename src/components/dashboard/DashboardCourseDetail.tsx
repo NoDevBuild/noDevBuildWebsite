@@ -34,7 +34,7 @@ const DashboardCourseDetail: React.FC<DashboardCourseDetailProps> = ({ darkMode 
 
   if (isLoading || loading) {
     return (
-      <div className="p-6">
+      <div className={`p-6 ${darkMode ? 'bg-gray-900' : 'bg-white'}`}>
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent"></div>
         </div>
@@ -44,9 +44,9 @@ const DashboardCourseDetail: React.FC<DashboardCourseDetailProps> = ({ darkMode 
 
   if (error) {
     return (
-      <div className="p-6">
+      <div className={`p-6 ${darkMode ? 'bg-gray-900' : 'bg-white'}`}>
         <div className="text-center py-12">
-          <div className="text-red-600 bg-red-50 p-4 rounded-lg inline-block">
+          <div className={`text-red-600 ${darkMode ? 'bg-red-900/20' : 'bg-red-50'} p-4 rounded-lg inline-block`}>
             <p>{error}</p>
           </div>
         </div>
@@ -56,9 +56,9 @@ const DashboardCourseDetail: React.FC<DashboardCourseDetailProps> = ({ darkMode 
 
   if (!course) {
     return (
-      <div className="p-6">
+      <div className={`p-6 ${darkMode ? 'bg-gray-900' : 'bg-white'}`}>
         <div className="text-center py-12">
-          <h2 className="text-2xl font-bold mb-4">Course not found</h2>
+          <h2 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Course not found</h2>
           <button 
             onClick={handleBack}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
@@ -80,11 +80,11 @@ const DashboardCourseDetail: React.FC<DashboardCourseDetailProps> = ({ darkMode 
   const totalLessons = 20;
 
   return (
-    <div className="p-6">
+    <div className={`p-6 ${darkMode ? 'bg-gray-900' : 'bg-white'}`}>
       <div className="mb-6">
         <button 
           onClick={handleBack}
-          className="flex items-center text-blue-600 hover:text-blue-700 mb-4"
+          className={`flex items-center ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'} mb-4`}
         >
           <ArrowLeft className="h-5 w-5 mr-2" />
           Back to My Courses
@@ -107,30 +107,30 @@ const DashboardCourseDetail: React.FC<DashboardCourseDetailProps> = ({ darkMode 
               
               {/* Title and Description */}
               <div className="flex-1">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
+                <h1 className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                   {course.title}
                 </h1>
-                <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-4 sm:mb-6">
+                <p className={`text-base sm:text-lg md:text-xl mb-4 sm:mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                   {course.description}
                 </p>
                 
                 <div className="flex flex-wrap gap-3 sm:gap-6 mb-4 sm:mb-6 text-sm sm:text-base">
                   <div className="flex items-center">
-                    <Clock className="w-4 sm:w-5 h-4 sm:h-5 text-blue-600 mr-1.5 sm:mr-2" />
-                    <span>{course.duration}</span>
+                    <Clock className={`w-4 sm:w-5 h-4 sm:h-5 ${darkMode ? 'text-blue-400' : 'text-blue-600'} mr-1.5 sm:mr-2`} />
+                    <span className={darkMode ? 'text-gray-300' : 'text-gray-700'}>{course.duration}</span>
                   </div>
                   <div className="flex items-center">
-                    <BookOpen className="w-4 sm:w-5 h-4 sm:h-5 text-blue-600 mr-1.5 sm:mr-2" />
-                    <span>{course.lessons} lessons</span>
+                    <BookOpen className={`w-4 sm:w-5 h-4 sm:h-5 ${darkMode ? 'text-blue-400' : 'text-blue-600'} mr-1.5 sm:mr-2`} />
+                    <span className={darkMode ? 'text-gray-300' : 'text-gray-700'}>{course.lessons} lessons</span>
                   </div>
                   <div className="flex items-center">
-                    <Users className="w-4 sm:w-5 h-4 sm:h-5 text-blue-600 mr-1.5 sm:mr-2" />
-                    <span>{course.students.toLocaleString()}+ members</span>
+                    <Users className={`w-4 sm:w-5 h-4 sm:h-5 ${darkMode ? 'text-blue-400' : 'text-blue-600'} mr-1.5 sm:mr-2`} />
+                    <span className={darkMode ? 'text-gray-300' : 'text-gray-700'}>{course.students.toLocaleString()}+ members</span>
                   </div>
                   <div className="flex items-center">
                     <Star className="w-4 sm:w-5 h-4 sm:h-5 text-yellow-400 fill-current mr-1" />
-                    <span>{course.rating}</span>
-                    <span className="text-gray-500 ml-1">({course.reviews} reviews)</span>
+                    <span className={darkMode ? 'text-gray-300' : 'text-gray-700'}>{course.rating}</span>
+                    <span className={`ml-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>({course.reviews} reviews)</span>
                   </div>
                 </div>
 
@@ -141,8 +141,8 @@ const DashboardCourseDetail: React.FC<DashboardCourseDetailProps> = ({ darkMode 
                     className="w-10 sm:w-12 h-10 sm:h-12 rounded-full object-cover mr-3 sm:mr-4"
                   />
                   <div>
-                    <h3 className="font-semibold text-gray-900 text-sm sm:text-base">{course.instructor.name}</h3>
-                    <p className="text-gray-600 text-sm">{course.instructor.title}</p>
+                    <h3 className={`font-semibold text-sm sm:text-base ${darkMode ? 'text-white' : 'text-gray-900'}`}>{course.instructor.name}</h3>
+                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{course.instructor.title}</p>
                   </div>
                 </div>
               </div>
@@ -151,60 +151,60 @@ const DashboardCourseDetail: React.FC<DashboardCourseDetailProps> = ({ darkMode 
 
           {/* Course Progress */}
           <div className="mb-8 sm:mb-12">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <h2 className={`text-xl sm:text-2xl font-bold mb-4 sm:mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
               Your Progress
             </h2>
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className={`rounded-xl shadow-sm p-6 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
               <div className="flex justify-between mb-2">
-                <span className="font-medium">Course Progress</span>
-                <span>{progress}%</span>
+                <span className={`font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Course Progress</span>
+                <span className={darkMode ? 'text-gray-300' : 'text-gray-700'}>{progress}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+              <div className={`w-full rounded-full h-2.5 mb-2 ${darkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
                 <div 
                   className="bg-blue-600 h-2.5 rounded-full" 
                   style={{ width: `${progress}%` }}
                 ></div>
               </div>
-              <p className="text-sm text-gray-500">
+              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                 {completedLessons} of {totalLessons} lessons completed
               </p>
             </div>
           </div>
 
           <div className="mb-8 sm:mb-12">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <h2 className={`text-xl sm:text-2xl font-bold mb-4 sm:mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
               What you'll learn in this course
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {allLessons.map((lesson: string, index: number) => (
                 <div key={index} className="flex items-start">
-                  <div className="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center mr-3 mt-0.5">
-                    <Check className="w-3 h-3 text-purple-600" />
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center mr-3 mt-0.5 ${darkMode ? 'bg-purple-900/50' : 'bg-purple-100'}`}>
+                    <Check className={`w-3 h-3 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`} />
                   </div>
-                  <span className="text-sm sm:text-base text-gray-700">{lesson}</span>
+                  <span className={`text-sm sm:text-base ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{lesson}</span>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="mb-8 sm:mb-12">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <h2 className={`text-xl sm:text-2xl font-bold mb-4 sm:mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
               Course Content
             </h2>
             <div className="space-y-3 sm:space-y-4">
               {course.courseContent.map((section: any, index: number) => (
-                <div key={index} className="border rounded-lg p-4 sm:p-6 bg-gray-50">
+                <div key={index} className={`border rounded-lg p-4 sm:p-6 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50'}`}>
                   <div className="flex justify-between items-center mb-3 sm:mb-4">
-                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900">{section.title}</h3>
-                    <span className="text-sm sm:text-base text-gray-500">{section.duration}</span>
+                    <h3 className={`text-lg sm:text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{section.title}</h3>
+                    <span className={`text-sm sm:text-base ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{section.duration}</span>
                   </div>
                   <ul className="space-y-2 sm:space-y-3">
                     {section.lessons.map((lesson: string, lessonIndex: number) => (
                       <li key={lessonIndex} className="flex items-start">
-                        <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center mr-3 mt-0.5">
-                          <Check className="w-3 h-3 text-blue-600" />
+                        <div className={`w-5 h-5 rounded-full flex items-center justify-center mr-3 mt-0.5 ${darkMode ? 'bg-blue-900/50' : 'bg-blue-100'}`}>
+                          <Check className={`w-3 h-3 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
                         </div>
-                        <span className="text-sm sm:text-base text-gray-700">{lesson}</span>
+                        <span className={`text-sm sm:text-base ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{lesson}</span>
                       </li>
                     ))}
                   </ul>
@@ -214,28 +214,28 @@ const DashboardCourseDetail: React.FC<DashboardCourseDetailProps> = ({ darkMode 
           </div>
 
           <div className="mb-8 sm:mb-12">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <h2 className={`text-xl sm:text-2xl font-bold mb-4 sm:mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
               Who is this course for?
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {course.targetAudience.map((point: string, index: number) => (
                 <div key={index} className="flex items-start">
-                  <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center mr-3 mt-0.5">
-                    <Check className="w-3 h-3 text-green-600" />
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center mr-3 mt-0.5 ${darkMode ? 'bg-green-900/50' : 'bg-green-100'}`}>
+                    <Check className={`w-3 h-3 ${darkMode ? 'text-green-400' : 'text-green-600'}`} />
                   </div>
-                  <span className="text-sm sm:text-base text-gray-700">{point}</span>
+                  <span className={`text-sm sm:text-base ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{point}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <FAQ faqs={course.faqs} />
+          <FAQ faqs={course.faqs} darkMode={darkMode} />
         </div>
 
         <div className="lg:col-span-1">
           <div className="sticky top-24">
-            <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50"></div>
+            <div className={`rounded-3xl shadow-xl border overflow-hidden ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-gradient-to-br from-white to-gray-50 border-gray-100'}`}>
+              <div className={`absolute inset-0 ${darkMode ? 'bg-gray-800/50' : 'bg-gradient-to-br from-blue-50/50 to-purple-50/50'}`}></div>
               
               <div className="relative p-6 sm:p-8">
                 <div className="flex items-center gap-3 mb-6">
@@ -248,25 +248,25 @@ const DashboardCourseDetail: React.FC<DashboardCourseDetailProps> = ({ darkMode 
                 </div>
 
                 <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
-                  <div className="flex items-center gap-3 text-gray-700">
-                    <div className="w-9 sm:w-10 h-9 sm:h-10 bg-blue-50 rounded-xl flex items-center justify-center">
-                      <Shield className="w-4 sm:w-5 h-4 sm:h-5 text-blue-600" />
+                  <div className="flex items-center gap-3">
+                    <div className={`w-9 sm:w-10 h-9 sm:h-10 rounded-xl flex items-center justify-center ${darkMode ? 'bg-blue-900/50' : 'bg-blue-50'}`}>
+                      <Shield className={`w-4 sm:w-5 h-4 sm:h-5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
                     </div>
-                    <span className="font-medium text-sm sm:text-base">60-day money back guarantee</span>
+                    <span className={`font-medium text-sm sm:text-base ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>60-day money back guarantee</span>
                   </div>
                   
-                  <div className="flex items-center gap-3 text-gray-700">
-                    <div className="w-9 sm:w-10 h-9 sm:h-10 bg-purple-50 rounded-xl flex items-center justify-center">
-                      <Users className="w-4 sm:w-5 h-4 sm:h-5 text-purple-600" />
+                  <div className="flex items-center gap-3">
+                    <div className={`w-9 sm:w-10 h-9 sm:h-10 rounded-xl flex items-center justify-center ${darkMode ? 'bg-purple-900/50' : 'bg-purple-50'}`}>
+                      <Users className={`w-4 sm:w-5 h-4 sm:h-5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`} />
                     </div>
-                    <span className="font-medium text-sm sm:text-base">Join {course.students.toLocaleString()}+ members</span>
+                    <span className={`font-medium text-sm sm:text-base ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Join {course.students.toLocaleString()}+ members</span>
                   </div>
                   
-                  <div className="flex items-center gap-3 text-gray-700">
-                    <div className="w-9 sm:w-10 h-9 sm:h-10 bg-green-50 rounded-xl flex items-center justify-center">
-                      <Trophy className="w-4 sm:w-5 h-4 sm:h-5 text-green-600" />
+                  <div className="flex items-center gap-3">
+                    <div className={`w-9 sm:w-10 h-9 sm:h-10 rounded-xl flex items-center justify-center ${darkMode ? 'bg-green-900/50' : 'bg-green-50'}`}>
+                      <Trophy className={`w-4 sm:w-5 h-4 sm:h-5 ${darkMode ? 'text-green-400' : 'text-green-600'}`} />
                     </div>
-                    <span className="font-medium text-sm sm:text-base">Certificate of completion</span>
+                    <span className={`font-medium text-sm sm:text-base ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Certificate of completion</span>
                   </div>
                 </div>
 
