@@ -13,6 +13,8 @@ const VerifyEmailPage: React.FC = () => {
   const [membershipStatus, setMembershipStatus] = useState<string>('');
   const [isRedirecting, setIsRedirecting] = useState<boolean>(false);
   const [redirectPath, setRedirectPath] = useState<string>('');
+  const [retryCount, setRetryCount] = useState<number>(0);
+  const maxRetries = 3;
 
   useEffect(() => {
     const verifyEmail = async () => {
@@ -48,12 +50,22 @@ const VerifyEmailPage: React.FC = () => {
         }
       } catch (error: any) {
         console.error('Email verification error:', error);
+        
+        // Handle network errors with retry logic
+        if (error.response?.data?.code === 'auth/network-request-failed' && retryCount < maxRetries) {
+          setRetryCount(prev => prev + 1);
+          setTimeout(() => {
+            verifyEmail();
+          }, 2000 * (retryCount + 1)); // Exponential backoff
+          return;
+        }
+        
         handleErrorResponse(error.response?.data || { error: 'An error occurred during verification' });
       }
     };
 
     verifyEmail();
-  }, [searchParams, navigate]);
+  }, [searchParams, navigate, retryCount]);
 
   const handleErrorResponse = (data: any) => {
     setVerificationStatus('error');
@@ -63,6 +75,8 @@ const VerifyEmailPage: React.FC = () => {
         setVerificationStatus('warning');
         setErrorMessage('Your email is already verified. You will be redirected to complete your registration.');
         setShowResendButton(false);
+        setUserEmail(data.email || '');
+        setMembershipStatus(data.membershipStatus || 'inactive');
         setRedirectPath('/register');
         setIsRedirecting(true);
         setTimeout(() => {
@@ -85,6 +99,8 @@ const VerifyEmailPage: React.FC = () => {
         setVerificationStatus('warning');
         setErrorMessage('Your account is already enabled. You will be redirected to complete your registration.');
         setShowResendButton(false);
+        setUserEmail(data.email || '');
+        setMembershipStatus(data.membershipStatus || 'inactive');
         setRedirectPath('/register');
         setIsRedirecting(true);
         setTimeout(() => {
@@ -98,6 +114,10 @@ const VerifyEmailPage: React.FC = () => {
       case 'auth/too-many-requests':
         setErrorMessage('Too many verification attempts. Please try again later.');
         setShowResendButton(false);
+        break;
+      case 'auth/server-error':
+        setErrorMessage('Server error. Please try again later or contact support.');
+        setShowResendButton(true);
         break;
       default:
         setErrorMessage(data.error || 'An error occurred during verification');
@@ -132,7 +152,9 @@ const VerifyEmailPage: React.FC = () => {
           {verificationStatus === 'loading' && (
             <div className="flex flex-col items-center">
               <Loader2 className="h-12 w-12 text-purple-600 animate-spin" />
-              <p className="mt-4 text-gray-600">Verifying your email...</p>
+              <p className="mt-4 text-gray-600">
+                {retryCount > 0 ? `Retrying verification (${retryCount}/${maxRetries})...` : 'Verifying your email...'}
+              </p>
             </div>
           )}
 
