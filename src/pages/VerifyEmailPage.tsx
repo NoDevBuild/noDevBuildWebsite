@@ -20,7 +20,7 @@ const VerifyEmailPage: React.FC = () => {
         const oobCode = searchParams.get('oobCode');
         const mode = searchParams.get('mode');
 
-        if (!oobCode || mode !== 'action') {
+        if (!oobCode) {
           setVerificationStatus('error');
           setErrorMessage('Invalid verification link. Please make sure you clicked the correct link from your email.');
           return;
