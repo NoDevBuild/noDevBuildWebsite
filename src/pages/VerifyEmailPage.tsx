@@ -22,6 +22,7 @@ const VerifyEmailPage: React.FC = () => {
     const verifyEmail = async () => {
       try {
         const oobCode = searchParams.get('oobCode');
+        const email = searchParams.get('email');
         const mode = searchParams.get('mode');
 
         if (!oobCode) {
@@ -30,8 +31,13 @@ const VerifyEmailPage: React.FC = () => {
           return;
         }
 
+        // Set the email from URL if available
+        if (email) {
+          setUserEmail(email);
+        }
+
         // Call backend to verify email
-        const response = await api.post('/auth/verify-email', { oobCode });
+        const response = await api.post('/auth/verify-email', { oobCode, email });
         
         if (response.data.success) {
           setVerificationStatus('success');
