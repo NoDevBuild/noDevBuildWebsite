@@ -15,7 +15,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import Avatar from '../common/Avatar';
 import { authService } from '../../services/authService';
-import 'tippy.js/dist/tippy.css';
 import Tippy from '@tippyjs/react';
 
 interface DashboardSidebarProps {

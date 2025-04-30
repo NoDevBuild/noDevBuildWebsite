@@ -11,5 +11,10 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['lucide-react']
+  },
+  build: {
+    rollupOptions: {
+      external: ['tippy.js/dist/tippy.css']
+    }
   }
 });
