@@ -313,7 +313,7 @@ const LoginPage: React.FC = () => {
 
               {!isSignup && (
                 <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center">
+                  {/* <div className="flex items-center">
                     <input
                       id="remember-me"
                       type="checkbox"
@@ -323,7 +323,7 @@ const LoginPage: React.FC = () => {
                     <label htmlFor="remember-me" className="ml-2 block text-gray-300 text-sm">
                       Remember me
                     </label>
-                  </div>
+                  </div> */}
                   <button 
                     type="button"
                     onClick={handleForgotPassword}
