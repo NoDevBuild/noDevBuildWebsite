@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, LogIn, User, Eye, EyeOff, Check, X } from 'lucide-react';
 import AmongUsParticles from '../components/AmongUsParticles';
 import { useDispatch, useSelector } from 'react-redux';
-import { setError, setLoading, setUser } from '../store/authSlice';
+import { setError, setLoading, setUser, setMessage } from '../store/authSlice';
 import { RootState } from '../store/store';
 import { authService } from '../services/authService';
 import { isStrongPassword } from '../utils/validation';
@@ -16,6 +16,7 @@ const LoginPage: React.FC = () => {
   const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [signedUpEmail, setSignedUpEmail] = useState<string | null>(null);
   const [passwordRequirements, setPasswordRequirements] = useState({
     length: false,
     uppercase: false,
@@ -25,7 +26,15 @@ const LoginPage: React.FC = () => {
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { error, loading } = useSelector((state: RootState) => state.auth);
+  const { error, loading, message } = useSelector((state: RootState) => state.auth);
+
+  // Clear signedUpEmail when component unmounts or when navigating away
+  useEffect(() => {
+    return () => {
+      setSignedUpEmail(null);
+      dispatch(setMessage(null));
+    };
+  }, [dispatch]);
 
   const checkPasswordRequirements = (pass: string) => {
     setPasswordRequirements({
@@ -68,14 +77,34 @@ const LoginPage: React.FC = () => {
         // Add a delay to show loading animation
         await new Promise(resolve => setTimeout(resolve, 2000));
         
-        const user = await authService.register(email, password, fullName);
-        dispatch(setUser(user));
-        navigate('/');
+        const response = await authService.register(email, password, fullName);
+        
+        // Store the signed up email
+        setSignedUpEmail(email);
+        
+        // Show verification message
+        dispatch(setError(null));
+        dispatch(setMessage('Please check your email to verify your account. You will be able to login after verification.'));
+        
+        // Clear form fields
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+        setFullName('');
+        setPasswordRequirements({
+          length: false,
+          uppercase: false,
+          lowercase: false,
+          number: false,
+          special: false
+        });
       } else {
         // Add a delay to show loading animation
         await new Promise(resolve => setTimeout(resolve, 2000));
         
         const { user, membershipStatus } = await authService.login(email, password);
+        
+        // Update Redux store with user data
         dispatch(setUser({ ...user, membershipStatus }));
         
         // If user has active membership, redirect to dashboard
@@ -93,7 +122,14 @@ const LoginPage: React.FC = () => {
         }
       }
     } catch (error: any) {
-      dispatch(setError(error.message));
+      // Handle specific error codes
+      if (error.response?.data?.code === 'auth/email-not-verified') {
+        dispatch(setError('Please verify your email address before logging in. Check your inbox for the verification link.'));
+      } else if (error.response?.data?.code === 'auth/account-disabled') {
+        dispatch(setError('Your account is disabled. Please contact support.'));
+      } else {
+        dispatch(setError(error.message));
+      }
     } finally {
       dispatch(setLoading(false));
     }
@@ -111,6 +147,54 @@ const LoginPage: React.FC = () => {
   const handleForgotPassword = () => {
     navigate('/forgot-password');
   };
+
+  if (signedUpEmail) {
+    return (
+      <div className="min-h-screen w-full relative flex items-center justify-center bg-black overflow-hidden px-4 py-8 md:px-0 md:py-0">
+        <AmongUsParticles />
+        <div className="absolute inset-0 flex items-center justify-center p-4">
+          <div className="w-full max-w-md">
+            <div className="backdrop-blur-md bg-white/10 rounded-2xl shadow-2xl p-6 sm:p-8 border border-white/20">
+              <div className="text-center mb-6 sm:mb-8">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+                  Verify Your Email
+                </h2>
+                <p className="text-sm sm:text-base text-gray-300">
+                  We've sent a verification link to {signedUpEmail}
+                </p>
+              </div>
+
+              <div className="mb-6 p-3 sm:p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+                <p className="text-green-400 text-sm">
+                  Please check your email to verify your account. You will be able to login after verification.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                <button
+                  onClick={() => {
+                    setSignedUpEmail(null);
+                    setIsSignup(false);
+                  }}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 sm:py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-500 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm sm:text-base"
+                >
+                  <LogIn className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span>Login Again</span>
+                </button>
+
+                <button
+                  onClick={() => navigate('/')}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 sm:py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm sm:text-base"
+                >
+                  <span>Go to Home</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -151,6 +235,12 @@ const LoginPage: React.FC = () => {
             {error && (
               <div className="mb-6 p-3 sm:p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
                 <p className="text-red-400 text-sm">{error}</p>
+              </div>
+            )}
+
+            {message && (
+              <div className="mb-6 p-3 sm:p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+                <p className="text-green-400 text-sm">{message}</p>
               </div>
             )}
 

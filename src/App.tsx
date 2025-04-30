@@ -42,6 +42,7 @@ import UserMembershipPage from './pages/UserMembershipPage'
 import PitchDeck from './pages/PitchDeck'
 import PlacementsPage from './pages/PlacementsPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import VerifyEmailPage from './pages/VerifyEmailPage'
 
 function App() {
   const location = useLocation();
@@ -163,6 +164,16 @@ function App() {
                 keywords="register, sign up, membership, courses"
               />
               <RegisterPage />
+            </>
+          } />
+          <Route path='/verify-email' element={
+            <>
+              <SEO 
+                title="Verify Email"
+                description="Verify your email address to complete your NoDevBuild account setup."
+                keywords="email verification, account verification, email confirmation"
+              />
+              <VerifyEmailPage />
             </>
           } />
           <Route path='/startup-builder' element={

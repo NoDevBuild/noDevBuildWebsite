@@ -22,7 +22,7 @@ export const authService = {
         password 
       });
       
-      // Store the token
+      // Store the token for login since user is verified
       localStorage.setItem('token', response.data.token);
       
       // Get user profile to check membership status
@@ -45,7 +45,7 @@ export const authService = {
     }
   },
 
-  async register(email: string, password: string, fullName: string): Promise<User> {
+  async register(email: string, password: string, fullName: string): Promise<{ message: string }> {
     try {
       const response = await api.post<AuthResponse>('/auth/signup', {
         email,
@@ -53,19 +53,27 @@ export const authService = {
         displayName: fullName
       });
       
-      // Store the token
-      localStorage.setItem('token', response.data.token);
-      
-      // Show verification message if provided
-      if (response.data.message) {
-        console.info(response.data.message);
-      }
-      
-      return response.data.user;
+      // Don't store token during signup - wait for email verification
+      // Only return the success message
+      return {
+        message: response.data.message || 'Please check your email to verify your account. You will be able to login after verification.'
+      };
     } catch (error: any) {
-      console.log(error);
-      const errorMessage = error.response?.data?.error || error?.message || 'Registration failed';
-      throw new Error(errorMessage);
+      console.error('Registration error:', error);
+      
+      // Handle specific error codes
+      if (error.response?.data?.code === 'auth/email-already-exists') {
+        throw new Error('This email is already registered. Please try logging in or use a different email.');
+      } else if (error.response?.data?.code === 'auth/weak-password') {
+        throw new Error('Password is too weak. Please use a stronger password.');
+      } else if (error.response?.data?.code === 'auth/invalid-email') {
+        throw new Error('Invalid email format. Please enter a valid email address.');
+      } else if (error.response?.data?.code === 'auth/network-error') {
+        throw new Error('Network error. Please check your internet connection and try again.');
+      } else {
+        const errorMessage = error.response?.data?.error || error?.message || 'Registration failed. Please try again.';
+        throw new Error(errorMessage);
+      }
     }
   },
 

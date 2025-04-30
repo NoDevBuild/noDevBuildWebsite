@@ -5,6 +5,7 @@ interface AuthState {
   user: User | null;
   loading: boolean;
   error: string | null;
+  message: string | null;
   initialized: boolean;
 }
 
@@ -12,6 +13,7 @@ const initialState: AuthState = {
   user: null,
   loading: false,
   error: null,
+  message: null,
   initialized: false,
 };
 
@@ -35,11 +37,19 @@ const authSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
+    setMessage: (state, action: PayloadAction<string | null>) => {
+      state.message = action.payload;
+    },
     setInitialized: (state, action: PayloadAction<boolean>) => {
       state.initialized = action.payload;
     },
+    clearAuth: (state) => {
+      state.user = null;
+      state.error = null;
+      state.message = null;
+    }
   },
 });
 
-export const { setUser, setLoading, setError, setInitialized } = authSlice.actions;
+export const { setUser, setLoading, setError, setMessage, setInitialized, clearAuth } = authSlice.actions;
 export default authSlice.reducer;
