@@ -14,7 +14,13 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: ['tippy.js/dist/tippy.css']
+      external: ['tippy.js/dist/tippy.css'],
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'ui-vendor': ['@tippyjs/react', 'tippy.js']
+        }
+      }
     }
   }
 });
