@@ -103,9 +103,9 @@ export const authService = {
     }
   },
 
-  async resetPassword(email: string): Promise<{ link: string }> {
+  async resetPassword(email: string): Promise<{ message: string }> {
     try {
-      const response = await api.post<{ link: string }>('/auth/reset-password', { email });
+      const response = await api.post<{ message: string }>('/auth/reset-password', { email });
       return response.data;
     } catch (error: any) {
       const errorMessage = error.response?.data?.error || 'Password reset failed';

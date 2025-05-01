@@ -35,8 +35,8 @@ const VerifyEmailPage: React.FC = () => {
         // Handle password reset mode
         if (mode === 'resetPassword') {
           try {
-            // Call backend to verify the reset code using the existing verify-email endpoint
-            const response = await api.post('/verify-email', { oobCode, email, mode: 'resetPassword' });
+            // Call backend to verify the reset code
+            const response = await api.post('/auth/verify-password-reset', { oobCode });
             if (response.data.success) {
               // Redirect to reset password page with both oobCode and email
               navigate(`/reset-password?oobCode=${oobCode}&email=${response.data.email}`);
@@ -57,7 +57,7 @@ const VerifyEmailPage: React.FC = () => {
         }
 
         // Call backend to verify email
-        const response = await api.post('/verify-email', { oobCode, email, mode: 'verifyEmail' });
+        const response = await api.post('/auth/verify-email', { oobCode, email });
         
         if (response.data.success) {
           setVerificationStatus('success');
