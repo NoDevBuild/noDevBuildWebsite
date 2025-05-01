@@ -24,10 +24,18 @@ const VerifyEmailPage: React.FC = () => {
         const oobCode = searchParams.get('oobCode');
         const email = searchParams.get('email');
         const mode = searchParams.get('mode');
+        const continueUrl = searchParams.get('continueUrl');
 
         if (!oobCode) {
           setVerificationStatus('error');
           setErrorMessage('Invalid verification link. Please make sure you clicked the correct link from your email.');
+          return;
+        }
+
+        // Handle password reset mode
+        if (mode === 'resetPassword') {
+          // Redirect to reset password page with the oobCode
+          navigate(`/reset-password?oobCode=${oobCode}&email=${email || ''}`);
           return;
         }
 
