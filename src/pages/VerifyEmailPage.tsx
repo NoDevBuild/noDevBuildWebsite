@@ -34,8 +34,20 @@ const VerifyEmailPage: React.FC = () => {
 
         // Handle password reset mode
         if (mode === 'resetPassword') {
-          // Redirect to reset password page with the oobCode
-          navigate(`/reset-password?oobCode=${oobCode}&email=${email || ''}`);
+          try {
+            // Call backend to verify the reset code using the existing verify-email endpoint
+            const response = await api.post('/verify-email', { oobCode, email, mode: 'resetPassword' });
+            if (response.data.success) {
+              // Redirect to reset password page with both oobCode and email
+              navigate(`/reset-password?oobCode=${oobCode}&email=${response.data.email}`);
+            } else {
+              throw new Error(response.data.error || 'Invalid reset link');
+            }
+          } catch (error: any) {
+            setVerificationStatus('error');
+            setErrorMessage(error.response?.data?.error || 'Invalid or expired reset link. Please request a new one.');
+            setShowResendButton(true);
+          }
           return;
         }
 
@@ -45,7 +57,7 @@ const VerifyEmailPage: React.FC = () => {
         }
 
         // Call backend to verify email
-        const response = await api.post('/auth/verify-email', { oobCode, email });
+        const response = await api.post('/verify-email', { oobCode, email, mode: 'verifyEmail' });
         
         if (response.data.success) {
           setVerificationStatus('success');
