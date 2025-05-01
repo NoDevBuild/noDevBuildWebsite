@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
 import { useToast } from '../contexts/ToastContext';
+import { CheckCircle, ArrowLeft } from 'lucide-react';
 
 const ForgotPasswordPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [countdown, setCountdown] = useState(3);
   const navigate = useNavigate();
   const { showToast } = useToast();
   
@@ -14,11 +17,13 @@ const ForgotPasswordPage: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+    setIsSuccess(false);
+    setCountdown(3);
 
     try {
       await authService.resetPassword(email);
+      setIsSuccess(true);
       showToast('Password reset link sent to your email', 'success');
-      navigate('/login');
     } catch (error: any) {
       setError(error.message || 'Failed to send reset link');
       showToast(error.message || 'Failed to send reset link', 'error');
@@ -26,6 +31,50 @@ const ForgotPasswordPage: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isSuccess && countdown > 0) {
+      timer = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+    } else if (isSuccess && countdown === 0) {
+      navigate('/login');
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [isSuccess, countdown, navigate]);
+
+  if (isSuccess) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8">
+          <div className="text-center">
+            <CheckCircle className="mx-auto h-12 w-12 text-green-500" />
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+              Email Sent Successfully
+            </h2>
+            <p className="mt-2 text-center text-sm text-gray-600">
+              Check your email ({email}) for the password reset link.
+            </p>
+            <p className="mt-2 text-center text-sm text-gray-600">
+              Redirecting to login page in {countdown} seconds...
+            </p>
+            <div className="mt-8">
+              <button
+                onClick={() => navigate('/login')}
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+              >
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Go to Login Page
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

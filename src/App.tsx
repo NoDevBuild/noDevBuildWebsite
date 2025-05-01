@@ -43,6 +43,7 @@ import PitchDeck from './pages/PitchDeck'
 import PlacementsPage from './pages/PlacementsPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import VerifyEmailPage from './pages/VerifyEmailPage'
+import ResetPasswordPage from './pages/ResetPasswordPage'
 
 function App() {
   const location = useLocation();
@@ -292,6 +293,16 @@ function App() {
                 keywords="password reset, forgot password, account recovery"
               />
               <ForgotPasswordPage />
+            </>
+          } />
+          <Route path='/reset-password' element={
+            <>
+              <SEO 
+                title="Reset Password"
+                description="Set a new password for your NoDevBuild account."
+                keywords="password reset, new password, account security"
+              />
+              <ResetPasswordPage />
             </>
           } />
           <Route

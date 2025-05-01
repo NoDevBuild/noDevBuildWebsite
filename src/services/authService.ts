@@ -121,5 +121,17 @@ export const authService = {
       const errorMessage = error.response?.data?.error || 'Failed to fetch profile';
       throw new Error(errorMessage);
     }
+  },
+
+  async confirmPasswordReset(oobCode: string, newPassword: string) {
+    try {
+      const response = await api.post('/auth/confirm-password-reset', {
+        oobCode,
+        newPassword
+      });
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.error || 'Failed to reset password');
+    }
   }
 };
