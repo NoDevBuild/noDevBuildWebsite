@@ -1,19 +1,41 @@
 // This file is kept for compatibility but no longer used for authentication
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
+// Get environment configuration
+const isProd = import.meta.env.VITE_PROJECT_ENV === 'prod';
+
+// Firebase Configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCYlOLvglHyq8ccCH-NJBE7Uy-nRi82ABE",
-  authDomain: "nodevbuildweb.firebaseapp.com",
-  projectId: "nodevbuildweb",
-  storageBucket: "nodevbuildweb.firebasestorage.app",
-  messagingSenderId: "1027291490444",
-  appId: "1:1027291490444:web:a8179a380a28ebadb2f3a9",
-  measurementId: "G-G3T68V9SL6"
+  apiKey: isProd 
+    ? import.meta.env.VITE_PROD_FIREBASE_API_KEY 
+    : import.meta.env.VITE_DEV_FIREBASE_API_KEY,
+  authDomain: isProd 
+    ? import.meta.env.VITE_PROD_FIREBASE_AUTH_DOMAIN 
+    : import.meta.env.VITE_DEV_FIREBASE_AUTH_DOMAIN,
+  projectId: isProd 
+    ? import.meta.env.VITE_PROD_FIREBASE_PROJECT_ID 
+    : import.meta.env.VITE_DEV_FIREBASE_PROJECT_ID,
+  storageBucket: isProd 
+    ? import.meta.env.VITE_PROD_FIREBASE_STORAGE_BUCKET 
+    : import.meta.env.VITE_DEV_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: isProd 
+    ? import.meta.env.VITE_PROD_FIREBASE_MESSAGING_SENDER_ID 
+    : import.meta.env.VITE_DEV_FIREBASE_MESSAGING_SENDER_ID,
+  appId: isProd 
+    ? import.meta.env.VITE_PROD_FIREBASE_APP_ID 
+    : import.meta.env.VITE_DEV_FIREBASE_APP_ID,
+  measurementId: isProd 
+    ? import.meta.env.VITE_PROD_FIREBASE_MEASUREMENT_ID 
+    : import.meta.env.VITE_DEV_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+const firebaseApp = getApps().length === 0 
+  ? initializeApp(firebaseConfig)
+  : getApps()[0];
 
-export { auth };
+// Initialize Auth
+const auth = getAuth(firebaseApp);
+
+export { firebaseApp, auth };

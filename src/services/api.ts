@@ -1,13 +1,15 @@
 import axios from 'axios';
 
-const api = axios.create({
-  baseURL: 'http://localhost:5000/api/',
-  // baseURL: 'https://server-nodevbuild.onrender.com/api',
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
+// Get environment configuration
+const isProd = import.meta.env.VITE_PROJECT_ENV === 'prod';
 
+// Create axios instance with base URL
+const api = axios.create({
+  baseURL: isProd ? import.meta.env.VITE_PROD_API_URL : import.meta.env.VITE_DEV_API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 // Add auth token to requests if available
 api.interceptors.request.use(config => {
