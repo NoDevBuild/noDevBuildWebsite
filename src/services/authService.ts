@@ -133,5 +133,14 @@ export const authService = {
     } catch (error: any) {
       throw new Error(error.response?.data?.error || 'Failed to reset password');
     }
+  },
+
+  async verifyEmail(oobCode: string): Promise<{ message: string }> {
+    try {
+      const response = await api.post<{ message: string }>('/auth/verify-email', { oobCode });
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.error || 'Failed to verify email');
+    }
   }
 };

@@ -25,7 +25,7 @@ const Header = () => {
   const { showToast } = useToast();
 
   // Check if user is admin
-  const isAdmin = user && user.email === 'roman@gmail.com';
+  const isAdmin = user && user.email === 'lifeofshahrukh@gmail.com';
 
   useEffect(() => {
     const handleClickOutside = (event) => {

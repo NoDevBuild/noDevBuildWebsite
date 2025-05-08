@@ -67,7 +67,7 @@ const Courses = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {courses.map((course) => (
+          {Array.isArray(courses) && courses.map((course) => (
             <Link
               key={course.id}
               to={`/courses/${course.slug}`}

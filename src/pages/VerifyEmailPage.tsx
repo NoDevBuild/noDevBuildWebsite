@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { auth } from '../lib/firebase';
-import { applyActionCode } from 'firebase/auth';
 import { useToast } from '../contexts/ToastContext';
+import api from '../services/api';
 
 const VerifyEmailPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -25,30 +24,42 @@ const VerifyEmailPage: React.FC = () => {
 
         // Handle password reset mode
         if (mode === 'resetPassword') {
-          // Redirect to reset password page
           navigate(`/reset-password?oobCode=${oobCode}`);
           return;
         }
 
-        // Verify email using Firebase client SDK
-        await applyActionCode(auth, oobCode);
-        
-        setVerificationStatus('success');
-        showToast('Email verified successfully', 'success');
-        
-        // Redirect to login after 3 seconds
-        setTimeout(() => {
-          navigate('/login');
-        }, 3000);
+        // Get email from the URL if available
+        const email = searchParams.get('email');
+
+        // Call our backend API for verification
+        const response = await api.post('/auth/verify-email', {
+          oobCode,
+          email
+        });
+
+        if (response.data.success) {
+          setVerificationStatus('success');
+          showToast('Email verified successfully', 'success');
+          
+          // Redirect to login after 3 seconds
+          setTimeout(() => {
+            navigate('/login');
+          }, 3000);
+        } else {
+          throw new Error(response.data.error || 'Verification failed');
+        }
       } catch (error: any) {
         console.error('Email verification error:', error);
         setVerificationStatus('error');
         
         let errorMessage = 'Failed to verify email';
-        if (error.code === 'auth/invalid-action-code') {
+        if (error.response?.data?.code === 'auth/invalid-action-code') {
           errorMessage = 'Invalid or expired verification link';
-        } else if (error.code === 'auth/expired-action-code') {
+        } else if (error.response?.data?.code === 'auth/expired-action-code') {
           errorMessage = 'Verification link has expired';
+        } else if (error.response?.data?.code === 'auth/email-already-verified') {
+          errorMessage = 'Email is already verified';
+          setVerificationStatus('success');
         }
         
         setErrorMessage(errorMessage);
