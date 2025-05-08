@@ -23,6 +23,7 @@ import Testimonials from './components/Testimonials'
 import Footer from './components/Footer'
 import StartupBuilder from './components/StartupBuilder'
 import InvestorsSection from './components/InvestorsSection'
+import CollaboratedCompanies from './components/CollaboratedCompanies'
 
 // Pages
 import RegisterPage from './pages/RegisterPage'
@@ -328,8 +329,10 @@ function App() {
                 />
                 <main className='bg-[#0d1117]'>
                   <Hero />
+                  <CollaboratedCompanies />
                   <div className='bg-white'>
-                    <PoweredBy />
+                    
+                    {/* <PoweredBy /> */}
                     <Courses />
                     <WhyNoCode />
                     {/* <Instructors /> */}
