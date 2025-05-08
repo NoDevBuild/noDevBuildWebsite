@@ -5,8 +5,8 @@ const isProd = import.meta.env.VITE_PROJECT_ENV === 'prod';
 
 // Create axios instance with base URL
 const api = axios.create({
-  // baseURL: isProd ? import.meta.env.VITE_PROD_API_URL : import.meta.env.VITE_DEV_API_URL,
-  baseURL: 'http://localhost:5000/api',
+  baseURL: isProd ? import.meta.env.VITE_PROD_API_URL : import.meta.env.VITE_DEV_API_URL,
+  // baseURL: 'http://localhost:5000/api',
   headers: {
     'Content-Type': 'application/json',
   },
