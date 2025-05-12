@@ -61,7 +61,7 @@ const RegisterPage: React.FC = () => {
   const [discountPercent, setDiscountPercent] = useState(0);
   const [codeError, setCodeError] = useState('');
   const [isCodeApplied, setIsCodeApplied] = useState(false);
-  const [activePlan, setActivePlan] = useState('basicPlan')
+  const [activePlan, setActivePlan] = useState('premiumPlan')
 
   useEffect(() => {
     // Load Razorpay script when component mounts
@@ -251,7 +251,7 @@ const RegisterPage: React.FC = () => {
                     <div className="text-2xl font-bold">
                       {selectedPlan.discountedPrice ? (
                         <>
-                          <span className="text-gray-400 line-through text-lg mr-2">
+                          <span className="text-gray-400 line-through text-lg mr-2 select-none">
                             ₹{selectedPlan.originalPrice}
                           </span>
                           ₹{selectedPlan.discountedPrice}
@@ -261,7 +261,7 @@ const RegisterPage: React.FC = () => {
                       )}
                     </div>
                     {selectedPlan.type === 'basicPlan' && (
-                      <span className="text-sm text-gray-500">per year</span>
+                      <span className="text-sm text-gray-500 select-none">per year</span>
                     )}
                   </div>
                 </div>
@@ -402,24 +402,24 @@ const RegisterPage: React.FC = () => {
                   setActivePlan(plan.type);
                   // handlePlanSelect(plan.type);
                 }}
-                className={`relative bg-white rounded-2xl shadow-xl p-6 sm:p-8 border-2 cursor-pointer transition-all duration-200 hover:shadow-lg ${
+                className={`relative bg-white rounded-2xl shadow-xl p-6 sm:p-8 border-2 cursor-pointer transition-all duration-200 hover:shadow-lg select-none ${
                   activePlan === plan.type ? 'border-[#1e293b]' : 'border-transparent'
                 }`}
               >
                 {plan.discountPercent > 0 && (
-                  <div className="absolute -top-3 right-6 sm:right-8 bg-[#fbbf24] text-white px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-bold">
+                  <div className="absolute -top-3 right-6 sm:right-8 bg-[#fbbf24] text-white px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-bold select-none">
                     {plan.discountPercent}% off
                   </div>
                 )}
                 
                 <div className="mb-6 sm:mb-8">
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#1e293b] mb-3 sm:mb-4">{plan.name}</h3>
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#1e293b] mb-3 sm:mb-4 select-none">{plan.name}</h3>
                   <div className="flex items-baseline gap-2">
                     {plan.discountPercent > 0 && (
-                      <span className="text-gray-400 line-through text-xl sm:text-2xl">₹{plan.originalPrice.toLocaleString()}</span>
+                      <span className="text-gray-400 line-through text-xl sm:text-2xl select-none">₹{plan.originalPrice.toLocaleString()}</span>
                     )}
-                    <span className="text-3xl sm:text-4xl font-bold text-[#1e293b]">₹{plan.currentPrice.toLocaleString()}</span>
-                    <span className="text-lg sm:text-xl text-gray-600">
+                    <span className="text-3xl sm:text-4xl font-bold text-[#1e293b] select-none">₹{plan.currentPrice.toLocaleString()}</span>
+                    <span className="text-lg sm:text-xl text-gray-600 select-none">
                       {plan.type === 'premiumPlan' ? (
                         <span className="font-bold text-[#1e293b]">/Lifetime</span>
                       ) : (
@@ -439,7 +439,7 @@ const RegisterPage: React.FC = () => {
                     e.stopPropagation();
                     handlePlanSelect(plan.type);
                   }}
-                  className={`w-full rounded-lg py-3 sm:py-4 font-semibold transition-colors text-base sm:text-lg ${
+                  className={`w-full rounded-lg py-3 sm:py-4 font-semibold transition-colors text-base sm:text-lg select-none ${
                     activePlan === plan.type 
                       ? 'bg-[#1e293b] text-white hover:bg-[#334155]' 
                       : 'bg-white text-[#1e293b] border-2 border-[#1e293b] hover:bg-gray-50'
